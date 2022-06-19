@@ -1,6 +1,7 @@
 use bevy::prelude::*;
 
 mod components;
+mod physics;
 mod player;
 mod setup;
 
