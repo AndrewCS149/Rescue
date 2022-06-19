@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 
-#[derive(Component, Eq, PartialEq)]
+#[derive(Component, Copy, Clone, Eq, PartialEq)]
 pub enum Direction {
     Left,
     Right,
@@ -16,3 +16,6 @@ pub struct Sprint(pub f32);
 
 #[derive(Component)]
 pub struct Player;
+
+#[derive(Component)]
+pub struct Projectile;
