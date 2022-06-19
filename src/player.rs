@@ -1,4 +1,4 @@
-use crate::components::{Direction, IsSprinting, Player, Speed, Sprint};
+use crate::components::{AnimationTimer, Direction, IsSprinting, Player, Speed, Sprint};
 use crate::physics;
 use bevy::prelude::*;
 
@@ -40,9 +40,6 @@ fn spawn_player(
         .insert(Direction::Down)
         .insert(IsSprinting(false));
 }
-
-#[derive(Component, Deref, DerefMut)]
-struct AnimationTimer(Timer);
 
 fn animate_sprite(
     time: Res<Time>,
