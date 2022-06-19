@@ -1,4 +1,4 @@
-use crate::components::{Player, Speed};
+use crate::components::{Player, Speed, Sprint};
 use bevy::prelude::*;
 
 pub struct PlayerPlugin;
@@ -23,16 +23,18 @@ fn spawn_player(mut commands: Commands) {
     commands
         .spawn_bundle(sprite)
         .insert(Player)
-        .insert(Speed(150.0));
+        .insert(Speed(150.0))
+        .insert(Sprint(1.5));
 }
 
 fn player_movement(
     keys: Res<Input<KeyCode>>,
     time: Res<Time>,
-    mut player_query: Query<(&mut Transform, &Speed, With<Player>)>,
+    mut player_query: Query<(&mut Transform, &Speed, &Sprint, With<Player>)>,
 ) {
-    for (mut transform, speed, _) in player_query.iter_mut() {
+    for (mut transform, speed, sprint, _) in player_query.iter_mut() {
         let mut new_pos = Vec3::new(0.0, 0.0, 0.0);
+        let mut tmp_sprint = 1.0;
 
         // left
         if keys.pressed(KeyCode::A) {
@@ -54,6 +56,11 @@ fn player_movement(
             new_pos.y = -1.0;
         }
 
-        transform.translation += new_pos * speed.0 * time.delta_seconds();
+        // sprint
+        if keys.pressed(KeyCode::LShift) {
+            tmp_sprint = sprint.0;
+        }
+
+        transform.translation += new_pos * speed.0 * tmp_sprint * time.delta_seconds();
     }
 }
