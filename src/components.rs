@@ -16,3 +16,6 @@ pub struct Sprint(pub f32);
 
 #[derive(Component)]
 pub struct Player;
+
+#[derive(Component)]
+pub struct Projectile;
