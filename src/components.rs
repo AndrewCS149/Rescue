@@ -1,5 +1,8 @@
 use bevy::prelude::*;
 
+#[derive(Component, Deref, DerefMut)]
+pub struct AnimationTimer(pub Timer);
+
 #[derive(Component, Copy, Clone, Eq, PartialEq)]
 pub enum Direction {
     Left,
