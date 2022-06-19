@@ -1,18 +1,15 @@
 use bevy::prelude::*;
 
 mod player;
+mod setup;
 
 use player::PlayerPlugin;
+use setup::SetupPlugin;
 
 fn main() {
     App::new()
         .add_plugins(DefaultPlugins)
+        .add_plugin(SetupPlugin)
         .add_plugin(PlayerPlugin)
-        .add_startup_system(setup)
         .run();
-}
-
-fn setup(mut commands: Commands) {
-    let camera = OrthographicCameraBundle::new_2d();
-    commands.spawn_bundle(camera);
 }
