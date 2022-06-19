@@ -1,4 +1,4 @@
-use crate::components::{Player, Speed, Sprint};
+use crate::components::{Direction, Player, Speed, Sprint};
 use crate::physics;
 use bevy::prelude::*;
 
@@ -25,5 +25,6 @@ fn spawn_player(mut commands: Commands) {
         .spawn_bundle(sprite)
         .insert(Player)
         .insert(Speed(150.0))
-        .insert(Sprint(1.5));
+        .insert(Sprint(1.5))
+        .insert(Direction::Down);
 }
