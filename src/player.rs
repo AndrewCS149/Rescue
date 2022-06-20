@@ -16,16 +16,16 @@ fn spawn_player(
     assets: Res<AssetServer>,
     mut texture_atlases: ResMut<Assets<TextureAtlas>>,
 ) {
-    let handle = assets.load("hero/idle.png");
-    let atlas = TextureAtlas::from_grid(handle, Vec2::new(35.0, 47.0), 3, 1);
-    let atlas_handle = texture_atlases.add(atlas);
+    let image = assets.load("hero/idle.png");
+    let atlas = TextureAtlas::from_grid(image, Vec2::new(35.0, 47.0), 3, 1);
+    let handle = texture_atlases.add(atlas);
 
     let sprite_sheet = SpriteSheetBundle {
         sprite: TextureAtlasSprite {
             custom_size: Some(Vec2::new(10.0, 15.0)),
             ..default()
         },
-        texture_atlas: atlas_handle,
+        texture_atlas: handle,
         transform: Transform::from_scale(Vec3::splat(6.0)),
         ..default()
     };
