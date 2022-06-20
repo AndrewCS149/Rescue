@@ -25,21 +25,18 @@ pub fn movement<T: Component>(
             new_pos.x = -1.0;
             *direction = Direction::Left;
         }
-
         // right
-        if keys.pressed(KeyCode::D) {
+        else if keys.pressed(KeyCode::D) {
             new_pos.x = 1.0;
             *direction = Direction::Right;
         }
-
         // up
-        if keys.pressed(KeyCode::W) {
+        else if keys.pressed(KeyCode::W) {
             new_pos.y = 1.0;
             *direction = Direction::Up;
         }
-
         // down
-        if keys.pressed(KeyCode::S) {
+        else if keys.pressed(KeyCode::S) {
             new_pos.y = -1.0;
             *direction = Direction::Down;
         }
