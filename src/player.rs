@@ -16,7 +16,7 @@ fn spawn_player(
     assets: Res<AssetServer>,
     mut texture_atlases: ResMut<Assets<TextureAtlas>>,
 ) {
-    let handle = assets.load("heroSpriteSheet.png");
+    let handle = assets.load("hero/idle.png");
     let atlas = TextureAtlas::from_grid(handle, Vec2::new(35.0, 47.0), 3, 1);
     let atlas_handle = texture_atlases.add(atlas);
 
