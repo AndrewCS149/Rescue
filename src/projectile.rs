@@ -43,6 +43,7 @@ fn projectile_movement(
     mut query: Query<(&mut Transform, &Direction, &Speed), With<Projectile>>,
 ) {
     for (mut transform, direction, speed) in query.iter_mut() {
+        // move the projectile in the direction of the host's current direction
         let new_pos = match direction {
             Direction::Left => Vec3::new(-1.0, 0.0, 0.0),
             Direction::Right => Vec3::new(1.0, 0.0, 0.0),
