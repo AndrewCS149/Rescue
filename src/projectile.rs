@@ -14,18 +14,29 @@ impl Plugin for ProjectilePlugin {
 fn spawn_projectile<T: Component>(
     mut commands: Commands,
     keys: Res<Input<KeyCode>>,
+    assets: Res<AssetServer>,
     query: Query<(&Transform, &Direction, &IsSprinting), With<T>>,
 ) {
-    for (player_transform, direction, is_sprinting) in query.iter() {
-        // if the player has pressed the fire (space) button and is not sprinting
-        if keys.just_pressed(KeyCode::Space) && !is_sprinting.0 {
+    // if the player has pressed the fire (space) button and is not sprinting
+    if keys.just_pressed(KeyCode::Space) && !query.single().2 .0 {
+        for (player_transform, direction, _) in query.iter() {
+            // based on which direction the arrow is moving, choose either the
+            // X or Y arrow image and flip it if needed
+            let image = match direction {
+                Direction::Left => ("arrowX.png", true),
+                Direction::Right => ("arrowX.png", false),
+                Direction::Up => ("arrowY.png", false),
+                Direction::Down => ("arrowY.png", true),
+            };
+
             let sprite = SpriteBundle {
                 sprite: Sprite {
-                    color: Color::RED,
-                    custom_size: Some(Vec2::new(5.0, 5.0)),
+                    flip_x: image.1,
+                    flip_y: image.1,
                     ..default()
                 },
                 transform: *player_transform,
+                texture: assets.load(image.0),
                 ..default()
             };
 
