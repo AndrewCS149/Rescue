@@ -17,8 +17,8 @@ fn spawn_projectile<T: Component>(
     query: Query<(&Transform, &Direction, &IsSprinting), With<T>>,
 ) {
     for (player_transform, direction, is_sprinting) in query.iter() {
-        // only if the player has pressed the fire (space) button
-        if keys.pressed(KeyCode::Space) && !is_sprinting.0 {
+        // if the player has pressed the fire (space) button and is not sprinting
+        if keys.just_pressed(KeyCode::Space) && !is_sprinting.0 {
             let sprite = SpriteBundle {
                 sprite: Sprite {
                     color: Color::RED,
