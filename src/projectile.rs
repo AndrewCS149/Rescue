@@ -6,7 +6,8 @@ pub struct ProjectilePlugin;
 impl Plugin for ProjectilePlugin {
     fn build(&self, app: &mut App) {
         app.add_system(spawn_projectile::<Player>)
-            .add_system(projectile_movement);
+            .add_system(projectile_movement)
+            .add_system(despawn_projectile);
     }
 }
 
@@ -17,7 +18,7 @@ fn spawn_projectile<T: Component>(
 ) {
     for (player_transform, direction, is_sprinting) in query.iter() {
         // only if the player has pressed the fire (space) button
-        if keys.just_pressed(KeyCode::Space) && !is_sprinting.0 {
+        if keys.pressed(KeyCode::Space) && !is_sprinting.0 {
             let sprite = SpriteBundle {
                 sprite: Sprite {
                     color: Color::RED,
@@ -50,5 +51,23 @@ fn projectile_movement(
         };
 
         transform.translation += new_pos * speed.0 * time.delta_seconds();
+    }
+}
+
+// despawn the projectile if it is outside of the window bounds
+fn despawn_projectile(
+    mut commands: Commands,
+    mut windows: ResMut<Windows>,
+    projectile: Query<(Entity, &Transform, With<Projectile>)>,
+) {
+    for (projectile, transform, _) in projectile.iter() {
+        let window = windows.get_primary_mut().unwrap();
+        if transform.translation.x > window.width() / 2.0
+            || transform.translation.x < -(window.width() / 2.0)
+            || transform.translation.y > window.height() / 2.0
+            || transform.translation.y < -(window.height() / 2.0)
+        {
+            commands.entity(projectile).despawn();
+        }
     }
 }
