@@ -21,12 +21,8 @@ fn spawn_player(
     let handle = texture_atlases.add(atlas);
 
     let sprite_sheet = SpriteSheetBundle {
-        sprite: TextureAtlasSprite {
-            custom_size: Some(Vec2::new(10.0, 15.0)),
-            ..default()
-        },
         texture_atlas: handle,
-        transform: Transform::from_scale(Vec3::splat(6.0)),
+        // transform: Transform::from_scale(Vec3::splat(6.0)),
         ..default()
     };
 
