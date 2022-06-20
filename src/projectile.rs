@@ -58,9 +58,9 @@ fn projectile_movement(
 fn despawn_projectile(
     mut commands: Commands,
     mut windows: ResMut<Windows>,
-    projectile: Query<(Entity, &Transform, With<Projectile>)>,
+    projectile: Query<(Entity, &Transform), With<Projectile>>,
 ) {
-    for (projectile, transform, _) in projectile.iter() {
+    for (projectile, transform) in projectile.iter() {
         let window = windows.get_primary_mut().unwrap();
         if transform.translation.x > window.width() / 2.0
             || transform.translation.x < -(window.width() / 2.0)
