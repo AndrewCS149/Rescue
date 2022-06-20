@@ -28,7 +28,7 @@ fn spawn_player(
 
     let sprite = SpriteBundle {
         sprite: Sprite {
-            custom_size: Some(Vec2::new(52.5, 70.5)),
+            custom_size: Some(Vec2::new(73.5, 69.0)),
             ..default()
         },
         texture: assets.load("hero/idle.png"),
