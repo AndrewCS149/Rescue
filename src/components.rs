@@ -12,6 +12,9 @@ pub enum Direction {
 }
 
 #[derive(Component)]
+pub struct IsMoving(pub bool);
+
+#[derive(Component)]
 pub struct IsSprinting(pub bool);
 
 #[derive(Component)]

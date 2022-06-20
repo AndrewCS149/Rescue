@@ -1,4 +1,4 @@
-use crate::components::{AnimationTimer, Direction, IsSprinting, Player, Speed, Sprint};
+use crate::components::{AnimationTimer, Direction, IsMoving, IsSprinting, Player, Speed, Sprint};
 use crate::physics;
 use bevy::prelude::*;
 
@@ -7,7 +7,31 @@ pub struct PlayerPlugin;
 impl Plugin for PlayerPlugin {
     fn build(&self, app: &mut App) {
         app.add_startup_system(spawn_player)
-            .add_system(physics::movement::<Player>);
+            .add_system(physics::movement::<Player>)
+            .add_system(animate);
+    }
+}
+
+fn animate(
+    mut texture_atlases: ResMut<Assets<TextureAtlas>>,
+    assets: Res<AssetServer>,
+    player_query: Query<(&IsMoving, &Direction), With<Player>>,
+) {
+    for (is_moving, direction) in player_query.iter() {
+        if is_moving.0 {
+            println!("RUNNING");
+        } else {
+            println!("NOT RUNNING");
+        }
+        // let image = assets.load("hero/run_x.png");
+        // let atlas = TextureAtlas::from_grid(image, Vec2::new(49.0, 46.0), 4, 1);
+        // let handle = texture_atlases.add(atlas);
+
+        // let sprite_sheet = SpriteSheetBundle {
+        //     texture_atlas: handle,
+        //     transform: Transform::from_scale(Vec3::splat(1.5)),
+        //     ..default()
+        // };
     }
 }
 
@@ -42,5 +66,6 @@ fn spawn_player(
         .insert(Speed(150.0))
         .insert(Sprint(1.5))
         .insert(Direction::Down)
-        .insert(IsSprinting(false));
+        .insert(IsSprinting(false))
+        .insert(IsMoving(false));
 }
