@@ -11,52 +11,8 @@ impl Plugin for PlayerPlugin {
         app.add_startup_system(spawn_player)
             .add_system(physics::movement::<Player>)
             .add_system(change_animations);
-        // .add_system(animate);
     }
 }
-
-// #[derive(Component)]
-// enum Animations {
-//     IdleUp,
-//     IdleDown,
-//     MoveRight,
-//     MoveLeft,
-//     MoveUp,
-//     MoveDown,
-// }
-
-// fn animate(
-//     mut commands: Commands,
-//     mut texture_atlases: ResMut<Assets<TextureAtlas>>,
-//     assets: Res<AssetServer>,
-//     player_query: Query<(Entity, &IsMoving, &Direction), With<Player>>,
-// ) {
-//     for (entity, is_moving, direction) in player_query.iter() {
-//         if is_moving.0 {
-//             match direction {
-//                 Direction::Right => {
-//                     let image = assets.load("hero/run_x.png");
-//                     let atlas = TextureAtlas::from_grid(image, Vec2::new(49.0, 46.0), 4, 1);
-//                     let handle = texture_atlases.add(atlas);
-
-//                     let sprite_sheet = SpriteSheetBundle {
-//                         texture_atlas: handle,
-//                         transform: Transform::from_scale(Vec3::splat(1.5)),
-//                         ..default()
-//                     };
-
-//                     let child = commands.spawn_bundle(sprite_sheet).id();
-
-//                     commands
-//                         .entity(entity)
-//                         .push_children(&[child])
-//                         .insert(AnimationTimer(Timer::from_seconds(0.1, true)));
-//                 }
-//                 _ => {}
-//             }
-//         }
-//     }
-// }
 
 fn change_animations(
     mut player_query: Query<(&mut AnimationIndexRange, &Direction), With<Player>>,

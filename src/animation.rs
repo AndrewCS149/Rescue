@@ -1,11 +1,12 @@
-use crate::components::{AnimationIndexRange, AnimationTimer};
+use crate::components::{AnimationIndexRange, AnimationTimer, Direction, Player};
 use bevy::prelude::*;
 
 pub struct AnimationPlugin;
 
 impl Plugin for AnimationPlugin {
     fn build(&self, app: &mut App) {
-        app.add_system(animate_sprite);
+        app.add_system(animate_sprite)
+            .add_system(change_animation::<Player>);
     }
 }
 
@@ -31,5 +32,21 @@ pub fn animate_sprite(
                 sprite.index = sprite.index + 1;
             }
         }
+    }
+}
+
+fn change_animation<T: Component>(
+    mut player_query: Query<(&mut AnimationIndexRange, &Direction), With<T>>,
+) {
+    for (mut index_range, direction) in player_query.iter_mut() {
+        let new_index_range = match direction {
+            Direction::Left => (1, 4),
+            Direction::Right => (5, 8),
+            Direction::Down => (0, 0),
+            Direction::Up => (0, 0),
+        };
+
+        index_range.0 = new_index_range.0;
+        index_range.1 = new_index_range.1;
     }
 }
