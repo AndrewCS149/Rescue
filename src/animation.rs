@@ -49,7 +49,7 @@ fn change_animation<T: Component>(
         let new_index_range = match direction {
             Direction::Left => (8, 11),
             Direction::Right => (12, 15),
-            Direction::Down => (1, 3),
+            Direction::Down => (0, 3),
             Direction::Up => (4, 7),
         };
 
