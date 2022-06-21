@@ -47,10 +47,10 @@ fn change_animation<T: Component>(
 ) {
     for (mut index_range, direction) in player_query.iter_mut() {
         let new_index_range = match direction {
-            Direction::Left => (1, 4),
-            Direction::Right => (5, 8),
-            Direction::Down => (0, 0),
-            Direction::Up => (0, 0),
+            Direction::Left => (8, 11),
+            Direction::Right => (12, 15),
+            Direction::Down => (0, 3),
+            Direction::Up => (4, 7),
         };
 
         index_range.0 = new_index_range.0;
