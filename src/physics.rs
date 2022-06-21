@@ -1,4 +1,4 @@
-use crate::components::{Direction, IsSprinting, Speed, Sprint};
+use crate::components::{Direction, IsMoving, IsSprinting, Speed, Sprint};
 use bevy::prelude::*;
 
 pub fn movement<T: Component>(
@@ -11,14 +11,18 @@ pub fn movement<T: Component>(
             &Sprint,
             &mut Direction,
             &mut IsSprinting,
+            &mut IsMoving,
         ),
         With<T>,
     >,
 ) {
-    for (mut transform, speed, sprint, mut direction, mut is_sprinting) in query.iter_mut() {
+    for (mut transform, speed, sprint, mut direction, mut is_sprinting, mut is_moving) in
+        query.iter_mut()
+    {
         let mut new_pos = Vec3::new(0.0, 0.0, 0.0);
         let mut tmp_sprint = 1.0;
         is_sprinting.0 = false;
+        is_moving.0 = true;
 
         // left
         if keys.pressed(KeyCode::A) {
@@ -39,6 +43,8 @@ pub fn movement<T: Component>(
         else if keys.pressed(KeyCode::S) {
             new_pos.y = -1.0;
             *direction = Direction::Down;
+        } else {
+            is_moving.0 = false;
         }
 
         // sprint

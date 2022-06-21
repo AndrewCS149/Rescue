@@ -3,6 +3,9 @@ use bevy::prelude::*;
 #[derive(Component, Deref, DerefMut)]
 pub struct AnimationTimer(pub Timer);
 
+#[derive(Component)]
+pub struct AnimationIndexRange(pub usize, pub usize);
+
 #[derive(Component, Copy, Clone, Eq, PartialEq)]
 pub enum Direction {
     Left,
@@ -12,6 +15,9 @@ pub enum Direction {
 }
 
 #[derive(Component)]
+pub struct IsMoving(pub bool);
+
+#[derive(Component)]
 pub struct IsSprinting(pub bool);
 
 #[derive(Component)]
@@ -19,6 +25,7 @@ pub struct Player;
 
 #[derive(Component)]
 pub struct Projectile;
+
 #[derive(Component)]
 pub struct Speed(pub f32);
 
