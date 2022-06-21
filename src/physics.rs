@@ -22,31 +22,29 @@ pub fn movement<T: Component>(
         let mut new_pos = Vec3::new(0.0, 0.0, 0.0);
         let mut tmp_sprint = 1.0;
         is_sprinting.0 = false;
-        is_moving.0 = false;
+        is_moving.0 = true;
 
         // left
         if keys.pressed(KeyCode::A) {
             new_pos.x = -1.0;
             *direction = Direction::Left;
-            is_moving.0 = true;
         }
         // right
         else if keys.pressed(KeyCode::D) {
             new_pos.x = 1.0;
             *direction = Direction::Right;
-            is_moving.0 = true;
         }
         // up
         else if keys.pressed(KeyCode::W) {
             new_pos.y = 1.0;
             *direction = Direction::Up;
-            is_moving.0 = true;
         }
         // down
         else if keys.pressed(KeyCode::S) {
             new_pos.y = -1.0;
             *direction = Direction::Down;
-            is_moving.0 = true;
+        } else {
+            is_moving.0 = false;
         }
 
         // sprint
