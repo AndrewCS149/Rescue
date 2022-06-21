@@ -1,4 +1,4 @@
-use crate::components::{AnimationIndexRange, AnimationTimer, Direction, Player};
+use crate::components::{AnimationIndexRange, AnimationTimer, Direction, IsMoving, Player};
 use bevy::prelude::*;
 
 pub struct AnimationPlugin;
@@ -19,17 +19,24 @@ pub fn animate_sprite(
         &mut AnimationTimer,
         &mut AnimationIndexRange,
         &mut TextureAtlasSprite,
+        &IsMoving,
     )>,
 ) {
-    for (mut timer, index_range, mut sprite) in query.iter_mut() {
+    for (mut timer, index_range, mut sprite, is_moving) in query.iter_mut() {
         timer.tick(time.delta());
         if timer.just_finished() {
-            if index_range.1 == 0 {
-                sprite.index = 0;
-            } else if !(index_range.0..index_range.1).contains(&sprite.index) {
-                sprite.index = index_range.0;
+            // run animations if the player is actively moving
+            if is_moving.0 {
+                if index_range.1 == 0 {
+                    sprite.index = 0;
+                } else if !(index_range.0..index_range.1).contains(&sprite.index) {
+                    sprite.index = index_range.0;
+                } else {
+                    sprite.index = sprite.index + 1;
+                }
+            // if player is not moving, set the sprite index to the first frame in the current range of animation indexes
             } else {
-                sprite.index = sprite.index + 1;
+                sprite.index = index_range.0;
             }
         }
     }
