@@ -9,24 +9,7 @@ pub struct PlayerPlugin;
 impl Plugin for PlayerPlugin {
     fn build(&self, app: &mut App) {
         app.add_startup_system(spawn_player)
-            .add_system(physics::movement::<Player>)
-            .add_system(change_animations);
-    }
-}
-
-fn change_animations(
-    mut player_query: Query<(&mut AnimationIndexRange, &Direction), With<Player>>,
-) {
-    for (mut index_range, direction) in player_query.iter_mut() {
-        let new_index_range = match direction {
-            Direction::Left => (1, 4),
-            Direction::Right => (5, 8),
-            Direction::Down => (0, 0),
-            Direction::Up => (0, 0),
-        };
-
-        index_range.0 = new_index_range.0;
-        index_range.1 = new_index_range.1;
+            .add_system(physics::movement::<Player>);
     }
 }
 
@@ -40,24 +23,10 @@ fn spawn_player(
     let handle = texture_atlases.add(atlas);
 
     let sprite_sheet = SpriteSheetBundle {
-        sprite: TextureAtlasSprite {
-            index: 0,
-            // flip_x: todo!(),
-            ..default()
-        },
         texture_atlas: handle,
         transform: Transform::from_scale(Vec3::splat(1.5)),
         ..default()
     };
-
-    // let sprite = SpriteBundle {
-    //     sprite: Sprite {
-    //         custom_size: Some(Vec2::new(73.5, 69.0)),
-    //         ..default()
-    //     },
-    //     texture: assets.load("hero/idle.png"),
-    //     ..default()
-    // };
 
     commands
         .spawn_bundle(sprite_sheet)
