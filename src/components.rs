@@ -30,6 +30,9 @@ pub enum Direction {
 pub struct Enemy;
 
 #[derive(Component)]
+pub struct Health(f32);
+
+#[derive(Component)]
 pub struct IsAttacking(pub bool);
 
 #[derive(Component)]
