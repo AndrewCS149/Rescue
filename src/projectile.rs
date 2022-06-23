@@ -38,8 +38,8 @@ fn spawn_projectile<T: Component>(
             let (image, anim) = match direction {
                 Direction::Left => (("arrowX.png", true), Animation::ShootLeft),
                 Direction::Right => (("arrowX.png", false), Animation::ShootRight),
-                Direction::Up => (("arrowY.png", false), Animation::ShootRight),
-                Direction::Down => (("arrowY.png", true), Animation::ShootLeft),
+                Direction::Up => (("arrowY.png", false), Animation::ShootUp),
+                Direction::Down => (("arrowY.png", true), Animation::ShootDown),
             };
 
             *animation = anim;

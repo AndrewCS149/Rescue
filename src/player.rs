@@ -20,7 +20,7 @@ fn spawn_player(
     mut texture_atlases: ResMut<Assets<TextureAtlas>>,
 ) {
     let image = assets.load("hero.png");
-    let atlas = TextureAtlas::from_grid(image, Vec2::new(36.0, 46.0), 4, 6);
+    let atlas = TextureAtlas::from_grid(image, Vec2::new(36.0, 46.0), 4, 8);
     let handle = texture_atlases.add(atlas);
 
     let sprite_sheet = SpriteSheetBundle {
