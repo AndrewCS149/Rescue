@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 
-use crate::components::Enemy;
+use crate::components::{Enemy, Health};
 
 pub struct EnemyPlugin;
 
@@ -43,5 +43,6 @@ fn spawn_enemy(mut commands: Commands) {
         .with_children(|parent| {
             parent.spawn_bundle(healthbar);
         })
-        .insert(Enemy);
+        .insert(Enemy)
+        .insert(Health(200.0));
 }

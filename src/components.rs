@@ -18,6 +18,9 @@ pub enum Animation {
     ShootRight,
 }
 
+#[derive(Component)]
+pub struct Damage(pub f32);
+
 #[derive(Component, Copy, Clone, Eq, PartialEq)]
 pub enum Direction {
     Left,
@@ -30,7 +33,7 @@ pub enum Direction {
 pub struct Enemy;
 
 #[derive(Component)]
-pub struct Health(f32);
+pub struct Health(pub f32);
 
 #[derive(Component)]
 pub struct IsAttacking(pub bool);
