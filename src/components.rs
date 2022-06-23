@@ -23,8 +23,8 @@ pub enum Animation {
     // MeleeLeft,
     // MeleeUp,
     // MeleeDown,
-    // ShootUp,
-    // ShootDown,
+    ShootUp,
+    ShootDown,
     ShootLeft,
     ShootRight,
 }
