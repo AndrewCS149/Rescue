@@ -70,6 +70,8 @@ fn change_animation<T: Component>(
             true => match animation {
                 Animation::ShootRight => AnimationIndexRange(16, 19),
                 Animation::ShootLeft => AnimationIndexRange(20, 23),
+                Animation::ShootUp => AnimationIndexRange(24, 27),
+                Animation::ShootDown => AnimationIndexRange(28, 31),
             },
             false => match direction {
                 Direction::Down => AnimationIndexRange(0, 3),
