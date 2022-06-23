@@ -8,6 +8,7 @@ impl Plugin for SetupPlugin {
     }
 }
 
+// spawns a camera to the game window on load
 fn setup_camera(mut commands: Commands) {
     let camera = OrthographicCameraBundle::new_2d();
     commands.spawn_bundle(camera);

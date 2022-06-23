@@ -1,4 +1,6 @@
-use crate::components::{Direction, IsSprinting, Player, Projectile, Speed};
+use crate::components::{
+    Animation, Direction, IsAttacking, IsSprinting, Player, Projectile, Speed,
+};
 use bevy::prelude::*;
 
 pub struct ProjectilePlugin;
@@ -11,23 +13,39 @@ impl Plugin for ProjectilePlugin {
     }
 }
 
+// spawns a projectile (arrow) every time the player pressed the fire (space) key
 fn spawn_projectile<T: Component>(
     mut commands: Commands,
     keys: Res<Input<KeyCode>>,
     assets: Res<AssetServer>,
-    query: Query<(&Transform, &Direction, &IsSprinting), With<T>>,
+    mut query: Query<
+        (
+            &Transform,
+            &Direction,
+            &IsSprinting,
+            &mut IsAttacking,
+            &mut Animation,
+        ),
+        With<T>,
+    >,
 ) {
-    // if the player has pressed the fire (space) button and is not sprinting
-    if keys.just_pressed(KeyCode::Space) && !query.single().2 .0 {
-        for (player_transform, direction, _) in query.iter() {
-            // based on which direction the arrow is moving, choose either the
-            // X or Y arrow image and flip it if needed
-            let image = match direction {
-                Direction::Left => ("arrowX.png", true),
-                Direction::Right => ("arrowX.png", false),
-                Direction::Up => ("arrowY.png", false),
-                Direction::Down => ("arrowY.png", true),
+    for (player_transform, direction, is_sprinting, mut is_attacking, mut animation) in
+        query.iter_mut()
+    {
+        // if the player has pressed the fire (space) button, is not sprinting and is not already attacking
+        if keys.just_pressed(KeyCode::Space) && !is_sprinting.0 && !is_attacking.0 {
+            is_attacking.0 = true;
+
+            // based on which direction the arrow is moving, choose either the X or Y arrow image and flip it if needed
+            // change appropriate animation enum
+            let (image, anim) = match direction {
+                Direction::Left => (("arrowX.png", true), Animation::ShootLeft),
+                Direction::Right => (("arrowX.png", false), Animation::ShootRight),
+                Direction::Up => (("arrowY.png", false), Animation::ShootUp),
+                Direction::Down => (("arrowY.png", true), Animation::ShootDown),
             };
+
+            *animation = anim;
 
             let sprite = SpriteBundle {
                 sprite: Sprite {
@@ -49,6 +67,7 @@ fn spawn_projectile<T: Component>(
     }
 }
 
+// controls the movement and directions of the projectiles
 fn projectile_movement(
     time: Res<Time>,
     mut query: Query<(&mut Transform, &Direction, &Speed), With<Projectile>>,

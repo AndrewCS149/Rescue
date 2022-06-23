@@ -1,4 +1,6 @@
-use crate::components::{AnimationIndexRange, AnimationTimer, Direction, IsMoving, Player};
+use crate::components::{
+    Animation, AnimationIndexRange, AnimationTimer, Direction, IsAttacking, IsMoving, Player,
+};
 use bevy::prelude::*;
 
 pub struct AnimationPlugin;
@@ -6,7 +8,8 @@ pub struct AnimationPlugin;
 impl Plugin for AnimationPlugin {
     fn build(&self, app: &mut App) {
         app.add_system(animate_sprite)
-            .add_system(change_animation::<Player>);
+            .add_system(change_animation::<Player>.before(animate_sprite));
+        // .add_system(change_animation::<Player>);
     }
 }
 
@@ -20,19 +23,28 @@ pub fn animate_sprite(
         &mut AnimationIndexRange,
         &mut TextureAtlasSprite,
         &IsMoving,
+        &mut IsAttacking,
     )>,
 ) {
-    for (mut timer, index_range, mut sprite, is_moving) in query.iter_mut() {
+    for (mut timer, index_range, mut sprite, is_moving, mut is_attacking) in query.iter_mut() {
         timer.tick(time.delta());
         if timer.just_finished() {
-            // run animations if the player is actively moving
-            if is_moving.0 {
-                if index_range.1 == 0 {
-                    sprite.index = 0;
-                } else if !(index_range.0..index_range.1).contains(&sprite.index) {
+            // run attack animations if player is attacking
+            if is_attacking.0 {
+                if !(index_range.0..index_range.1).contains(&sprite.index) {
+                    sprite.index = index_range.0 - 1;
+                } else if sprite.index == index_range.1 - 1 {
+                    is_attacking.0 = false;
+                }
+
+                sprite.index += 1;
+            }
+            // run move animations if the player is actively moving
+            else if is_moving.0 {
+                if !(index_range.0..index_range.1).contains(&sprite.index) {
                     sprite.index = index_range.0;
                 } else {
-                    sprite.index = sprite.index + 1;
+                    sprite.index += 1;
                 }
             // if player is not moving, set the sprite index to the first frame in the current range of animation indexes
             } else {
@@ -42,18 +54,32 @@ pub fn animate_sprite(
     }
 }
 
+// changes the current animations start index and end index
 fn change_animation<T: Component>(
-    mut player_query: Query<(&mut AnimationIndexRange, &Direction), With<T>>,
+    mut player_query: Query<
+        (
+            &mut AnimationIndexRange,
+            &Direction,
+            &IsAttacking,
+            &Animation,
+        ),
+        With<T>,
+    >,
 ) {
-    for (mut index_range, direction) in player_query.iter_mut() {
-        let new_index_range = match direction {
-            Direction::Left => (8, 11),
-            Direction::Right => (12, 15),
-            Direction::Down => (0, 3),
-            Direction::Up => (4, 7),
+    for (mut index_range, direction, is_attacking, animation) in player_query.iter_mut() {
+        *index_range = match is_attacking.0 {
+            true => match animation {
+                Animation::ShootRight => AnimationIndexRange(16, 19),
+                Animation::ShootLeft => AnimationIndexRange(20, 23),
+                Animation::ShootUp => AnimationIndexRange(24, 27),
+                Animation::ShootDown => AnimationIndexRange(28, 31),
+            },
+            false => match direction {
+                Direction::Down => AnimationIndexRange(0, 3),
+                Direction::Up => AnimationIndexRange(4, 7),
+                Direction::Left => AnimationIndexRange(8, 11),
+                Direction::Right => AnimationIndexRange(12, 15),
+            },
         };
-
-        index_range.0 = new_index_range.0;
-        index_range.1 = new_index_range.1;
     }
 }
