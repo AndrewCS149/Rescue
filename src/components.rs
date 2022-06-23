@@ -15,6 +15,21 @@ pub enum Direction {
 }
 
 #[derive(Component)]
+pub struct IsAttacking(pub bool);
+
+#[derive(Component)]
+pub enum Animation {
+    // MeleeRight,
+    // MeleeLeft,
+    // MeleeUp,
+    // MeleeDown,
+    // ShootUp,
+    // ShootDown,
+    ShootLeft,
+    ShootRight,
+}
+
+#[derive(Component)]
 pub struct IsMoving(pub bool);
 
 #[derive(Component)]

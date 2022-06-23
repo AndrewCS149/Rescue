@@ -1,4 +1,6 @@
-use crate::components::{Direction, IsSprinting, Player, Projectile, Speed};
+use crate::components::{
+    Animation, Direction, IsAttacking, IsSprinting, Player, Projectile, Speed,
+};
 use bevy::prelude::*;
 
 pub struct ProjectilePlugin;
@@ -15,19 +17,32 @@ fn spawn_projectile<T: Component>(
     mut commands: Commands,
     keys: Res<Input<KeyCode>>,
     assets: Res<AssetServer>,
-    query: Query<(&Transform, &Direction, &IsSprinting), With<T>>,
+    mut query: Query<
+        (
+            &Transform,
+            &Direction,
+            &IsSprinting,
+            &mut IsAttacking,
+            &mut Animation,
+        ),
+        With<T>,
+    >,
 ) {
     // if the player has pressed the fire (space) button and is not sprinting
     if keys.just_pressed(KeyCode::Space) && !query.single().2 .0 {
-        for (player_transform, direction, _) in query.iter() {
-            // based on which direction the arrow is moving, choose either the
-            // X or Y arrow image and flip it if needed
-            let image = match direction {
-                Direction::Left => ("arrowX.png", true),
-                Direction::Right => ("arrowX.png", false),
-                Direction::Up => ("arrowY.png", false),
-                Direction::Down => ("arrowY.png", true),
+        for (player_transform, direction, _, mut is_attacking, mut animation) in query.iter_mut() {
+            is_attacking.0 = true;
+
+            // based on which direction the arrow is moving, choose either the X or Y arrow image and flip it if needed
+            // change appropriate animation enum
+            let (image, anim) = match direction {
+                Direction::Left => (("arrowX.png", true), Animation::ShootLeft),
+                Direction::Right => (("arrowX.png", false), Animation::ShootRight),
+                Direction::Up => (("arrowY.png", false), Animation::ShootRight),
+                Direction::Down => (("arrowY.png", true), Animation::ShootLeft),
             };
+
+            *animation = anim;
 
             let sprite = SpriteBundle {
                 sprite: Sprite {

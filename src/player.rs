@@ -1,5 +1,6 @@
 use crate::components::{
-    AnimationIndexRange, AnimationTimer, Direction, IsMoving, IsSprinting, Player, Speed, Sprint,
+    Animation, AnimationIndexRange, AnimationTimer, Direction, IsAttacking, IsMoving, IsSprinting,
+    Player, Speed, Sprint,
 };
 use crate::physics;
 use bevy::prelude::*;
@@ -19,7 +20,7 @@ fn spawn_player(
     mut texture_atlases: ResMut<Assets<TextureAtlas>>,
 ) {
     let image = assets.load("hero.png");
-    let atlas = TextureAtlas::from_grid(image, Vec2::new(36.0, 46.0), 4, 4);
+    let atlas = TextureAtlas::from_grid(image, Vec2::new(36.0, 46.0), 4, 6);
     let handle = texture_atlases.add(atlas);
 
     let sprite_sheet = SpriteSheetBundle {
@@ -36,6 +37,8 @@ fn spawn_player(
         .insert(Speed(150.0))
         .insert(Sprint(1.5))
         .insert(Direction::Down)
+        .insert(Animation::ShootLeft)
+        .insert(IsAttacking(false))
         .insert(IsSprinting(false))
         .insert(IsMoving(false));
 }
