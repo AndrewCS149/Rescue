@@ -13,6 +13,7 @@ impl Plugin for ProjectilePlugin {
     }
 }
 
+// spawns a projectile (arrow) every time the player pressed the fire (space) key
 fn spawn_projectile<T: Component>(
     mut commands: Commands,
     keys: Res<Input<KeyCode>>,
@@ -66,6 +67,7 @@ fn spawn_projectile<T: Component>(
     }
 }
 
+// controls the movement and directions of the projectiles
 fn projectile_movement(
     time: Res<Time>,
     mut query: Query<(&mut Transform, &Direction, &Speed), With<Projectile>>,

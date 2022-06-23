@@ -1,6 +1,7 @@
 use crate::components::{Direction, IsAttacking, IsMoving, IsSprinting, Speed, Sprint};
 use bevy::prelude::*;
 
+// controls the WASD movement
 pub fn movement<T: Component>(
     keys: Res<Input<KeyCode>>,
     time: Res<Time>,

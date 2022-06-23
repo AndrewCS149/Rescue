@@ -14,6 +14,7 @@ impl Plugin for PlayerPlugin {
     }
 }
 
+// spawns the player to the game window on load
 fn spawn_player(
     mut commands: Commands,
     assets: Res<AssetServer>,

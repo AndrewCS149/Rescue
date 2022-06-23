@@ -54,6 +54,7 @@ pub fn animate_sprite(
     }
 }
 
+// changes the current animations start index and end index
 fn change_animation<T: Component>(
     mut player_query: Query<
         (
