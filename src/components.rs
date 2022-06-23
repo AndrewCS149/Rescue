@@ -6,17 +6,6 @@ pub struct AnimationTimer(pub Timer);
 #[derive(Component)]
 pub struct AnimationIndexRange(pub usize, pub usize);
 
-#[derive(Component, Copy, Clone, Eq, PartialEq)]
-pub enum Direction {
-    Left,
-    Right,
-    Up,
-    Down,
-}
-
-#[derive(Component)]
-pub struct IsAttacking(pub bool);
-
 #[derive(Component)]
 pub enum Animation {
     // MeleeRight,
@@ -28,6 +17,26 @@ pub enum Animation {
     ShootLeft,
     ShootRight,
 }
+
+#[derive(Component)]
+pub struct Damage(pub f32);
+
+#[derive(Component, Copy, Clone, Eq, PartialEq)]
+pub enum Direction {
+    Left,
+    Right,
+    Up,
+    Down,
+}
+
+#[derive(Component)]
+pub struct Enemy;
+
+#[derive(Component)]
+pub struct Health(pub f32);
+
+#[derive(Component)]
+pub struct IsAttacking(pub bool);
 
 #[derive(Component)]
 pub struct IsMoving(pub bool);
