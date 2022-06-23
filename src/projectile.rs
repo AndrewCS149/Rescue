@@ -1,5 +1,5 @@
 use crate::components::{
-    Animation, Direction, IsAttacking, IsSprinting, Player, Projectile, Speed,
+    Animation, Damage, Direction, IsAttacking, IsSprinting, Player, Projectile, Speed,
 };
 use bevy::prelude::*;
 
@@ -60,7 +60,8 @@ fn spawn_projectile<T: Component>(
                 .spawn_bundle(sprite)
                 .insert(Projectile)
                 .insert(*direction)
-                .insert(Speed(1000.0));
+                .insert(Speed(1000.0))
+                .insert(Damage(25.0));
         }
     }
 }
