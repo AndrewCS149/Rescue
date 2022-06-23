@@ -12,6 +12,19 @@ impl Plugin for EnemyPlugin {
 }
 
 fn spawn_enemy(mut commands: Commands) {
+    let healthbar = SpriteBundle {
+        sprite: Sprite {
+            color: Color::GREEN,
+            custom_size: Some(Vec2::new(30.0, 3.0)),
+            ..default()
+        },
+        transform: Transform {
+            translation: Vec3::new(0.0, 20.0, 0.0),
+            ..default()
+        },
+        ..default()
+    };
+
     let enemy = SpriteBundle {
         sprite: Sprite {
             color: Color::TOMATO,
@@ -25,5 +38,10 @@ fn spawn_enemy(mut commands: Commands) {
         ..default()
     };
 
-    commands.spawn_bundle(enemy).insert(Enemy);
+    commands
+        .spawn_bundle(enemy)
+        .with_children(|parent| {
+            parent.spawn_bundle(healthbar);
+        })
+        .insert(Enemy);
 }
