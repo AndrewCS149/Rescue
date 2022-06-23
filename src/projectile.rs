@@ -29,9 +29,7 @@ fn spawn_projectile<T: Component>(
         With<T>,
     >,
 ) {
-    for (player_transform, direction, is_sprinting, mut is_attacking, mut animation) in
-        query.iter_mut()
-    {
+    for (transform, direction, is_sprinting, mut is_attacking, mut animation) in query.iter_mut() {
         // if the player has pressed the fire (space) button, is not sprinting and is not already attacking
         if keys.just_pressed(KeyCode::Space) && !is_sprinting.0 && !is_attacking.0 {
             is_attacking.0 = true;
@@ -53,7 +51,7 @@ fn spawn_projectile<T: Component>(
                     flip_y: image.1,
                     ..default()
                 },
-                transform: *player_transform,
+                transform: *transform,
                 texture: assets.load(image.0),
                 ..default()
             };
