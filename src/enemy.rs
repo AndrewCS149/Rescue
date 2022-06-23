@@ -66,6 +66,7 @@ fn enemy_death(
             if enemy_pos.translation.distance(projectile_pos.translation)
                 < sprite.custom_size.unwrap().x / 2.0
             {
+                // despawn projectile when contact with enemy is made
                 commands.entity(projectile).despawn();
 
                 health.0 -= damage.0;
@@ -85,7 +86,7 @@ fn enemy_death(
                         _ => Color::GREEN,
                     };
 
-                    // create a new healthbar with updated health and location
+                    // create a new healthbar with updated health color and location
                     let updated_healthbar = SpriteBundle {
                         sprite: Sprite {
                             color: new_color,
