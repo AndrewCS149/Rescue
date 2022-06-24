@@ -2,7 +2,6 @@ use crate::components::{
     Animation, AnimationIndexRange, AnimationTimer, Direction, IsAttacking, IsMoving, IsSprinting,
     Player, Speed, Sprint,
 };
-use crate::physics;
 use bevy::prelude::*;
 
 pub struct PlayerPlugin;
@@ -10,7 +9,6 @@ pub struct PlayerPlugin;
 impl Plugin for PlayerPlugin {
     fn build(&self, app: &mut App) {
         app.add_startup_system(spawn_player);
-        // .add_system(physics::movement::<Player>);
     }
 }
 
