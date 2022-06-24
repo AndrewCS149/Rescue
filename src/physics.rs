@@ -1,8 +1,16 @@
-use crate::components::{Direction, IsAttacking, IsMoving, IsSprinting, Speed, Sprint};
+use crate::components::{Direction, IsAttacking, IsMoving, IsSprinting, Player, Speed, Sprint};
 use bevy::prelude::*;
 
+pub struct PhysicsPlugin;
+
+impl Plugin for PhysicsPlugin {
+    fn build(&self, app: &mut App) {
+        app.add_system(movement::<Player>);
+    }
+}
+
 // controls the WASD movement
-pub fn movement<T: Component>(
+fn movement<T: Component>(
     keys: Res<Input<KeyCode>>,
     time: Res<Time>,
     mut query: Query<

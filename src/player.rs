@@ -9,8 +9,8 @@ pub struct PlayerPlugin;
 
 impl Plugin for PlayerPlugin {
     fn build(&self, app: &mut App) {
-        app.add_startup_system(spawn_player)
-            .add_system(physics::movement::<Player>);
+        app.add_startup_system(spawn_player);
+        // .add_system(physics::movement::<Player>);
     }
 }
 

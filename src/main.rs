@@ -10,6 +10,7 @@ mod setup;
 
 use animation::AnimationPlugin;
 use enemy::EnemyPlugin;
+use physics::PhysicsPlugin;
 use player::PlayerPlugin;
 use projectile::ProjectilePlugin;
 use setup::SetupPlugin;
@@ -19,6 +20,7 @@ fn main() {
         .add_plugins(DefaultPlugins)
         .add_plugin(SetupPlugin)
         .add_plugin(AnimationPlugin)
+        .add_plugin(PhysicsPlugin)
         .add_plugin(PlayerPlugin)
         .add_plugin(EnemyPlugin)
         .add_plugin(ProjectilePlugin)
