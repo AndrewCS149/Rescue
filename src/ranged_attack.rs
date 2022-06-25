@@ -31,7 +31,7 @@ fn spawn_projectile<T: Component>(
 ) {
     for (transform, direction, is_sprinting, mut is_attacking, mut animation) in query.iter_mut() {
         // if the player has pressed the fire (space) button, is not sprinting and is not already attacking
-        if keys.just_pressed(KeyCode::Space) && !is_sprinting.0 && !is_attacking.0 {
+        if keys.just_pressed(KeyCode::J) && !is_sprinting.0 && !is_attacking.0 {
             is_attacking.0 = true;
 
             // based on which direction the arrow is moving, choose either the X or Y arrow image and flip it if needed

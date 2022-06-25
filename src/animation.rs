@@ -9,7 +9,6 @@ impl Plugin for AnimationPlugin {
     fn build(&self, app: &mut App) {
         app.add_system(animate_sprite)
             .add_system(change_animation::<Player>.before(animate_sprite));
-        // .add_system(change_animation::<Player>);
     }
 }
 
@@ -73,8 +72,8 @@ fn change_animation<T: Component>(
                 Animation::ShootLeft => AnimationIndexRange(20, 23),
                 Animation::ShootUp => AnimationIndexRange(24, 27),
                 Animation::ShootDown => AnimationIndexRange(28, 31),
-                Animation::MeleeLeft => AnimationIndexRange(32, 34),
-                Animation::MeleeRight => AnimationIndexRange(35, 37),
+                Animation::MeleeLeft => AnimationIndexRange(32, 33),
+                Animation::MeleeRight => AnimationIndexRange(34, 35),
             },
             false => match direction {
                 Direction::Down => AnimationIndexRange(0, 3),
