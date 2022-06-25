@@ -19,6 +19,9 @@ pub enum Animation {
 }
 
 #[derive(Component)]
+pub struct Collider;
+
+#[derive(Component)]
 pub struct Damage(pub f32);
 
 #[derive(Component, Copy, Clone, Eq, PartialEq)]

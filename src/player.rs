@@ -1,6 +1,6 @@
 use crate::components::{
-    Animation, AnimationIndexRange, AnimationTimer, Direction, IsAttacking, IsMoving, IsSprinting,
-    Player, Speed, Sprint,
+    Animation, AnimationIndexRange, AnimationTimer, Collider, Direction, IsAttacking, IsMoving,
+    IsSprinting, Player, Speed, Sprint,
 };
 use bevy::prelude::*;
 
@@ -30,6 +30,7 @@ fn spawn_player(
 
     commands
         .spawn_bundle(sprite_sheet)
+        .insert(Collider)
         .insert(AnimationTimer(Timer::from_seconds(0.1, true)))
         .insert(Player)
         .insert(AnimationIndexRange(0, 1))
