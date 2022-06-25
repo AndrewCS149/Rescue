@@ -3,9 +3,9 @@ use crate::components::{
 };
 use bevy::prelude::*;
 
-pub struct ProjectilePlugin;
+pub struct RangedAttackPlugin;
 
-impl Plugin for ProjectilePlugin {
+impl Plugin for RangedAttackPlugin {
     fn build(&self, app: &mut App) {
         app.add_system(spawn_projectile::<Player>)
             .add_system(projectile_movement)

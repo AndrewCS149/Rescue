@@ -6,7 +6,7 @@ mod enemy;
 mod map;
 mod physics;
 mod player;
-mod projectile;
+mod ranged_attack;
 mod setup;
 
 use animation::AnimationPlugin;
@@ -14,7 +14,7 @@ use enemy::EnemyPlugin;
 use map::MapPlugin;
 use physics::PhysicsPlugin;
 use player::PlayerPlugin;
-use projectile::ProjectilePlugin;
+use ranged_attack::RangedAttackPlugin;
 use setup::SetupPlugin;
 
 fn main() {
@@ -26,6 +26,6 @@ fn main() {
         .add_plugin(MapPlugin)
         .add_plugin(PhysicsPlugin)
         .add_plugin(PlayerPlugin)
-        .add_plugin(ProjectilePlugin)
+        .add_plugin(RangedAttackPlugin)
         .run();
 }

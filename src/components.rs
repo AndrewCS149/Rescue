@@ -8,8 +8,8 @@ pub struct AnimationIndexRange(pub usize, pub usize);
 
 #[derive(Component)]
 pub enum Animation {
-    // MeleeRight,
-    // MeleeLeft,
+    MeleeRight,
+    MeleeLeft,
     // MeleeUp,
     // MeleeDown,
     ShootUp,
