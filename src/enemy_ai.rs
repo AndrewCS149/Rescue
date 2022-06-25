@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 
-use crate::components::{Enemy, Player, Speed};
+use crate::components::{BoundaryTrigger, Enemy, Player, Speed};
 
 pub struct EnemyAIPlugin;
 

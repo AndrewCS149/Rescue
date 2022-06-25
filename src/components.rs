@@ -19,7 +19,7 @@ pub enum Animation {
 }
 
 #[derive(Component)]
-struct BoundaryTrigger(f32);
+pub struct BoundaryTrigger(pub f32);
 
 #[derive(Component)]
 pub struct Collider;

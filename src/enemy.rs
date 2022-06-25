@@ -1,11 +1,14 @@
 use bevy::prelude::*;
 
-use crate::components::{Collider, Damage, Enemy, EntitySize, Health, Projectile, Speed};
+use crate::components::{
+    BoundaryTrigger, Collider, Damage, Enemy, EntitySize, Health, Projectile, Speed,
+};
 
 const HEALTH: f32 = 200.0;
-const SPEED: f32 = 150.0;
+const SPEED: f32 = 125.0;
 const SIZE_X: f32 = 30.0;
 const SIZE_Y: f32 = 30.0;
+const BOUNDARY_TRIGGER: f32 = 250.0;
 
 pub struct EnemyPlugin;
 
@@ -48,7 +51,8 @@ fn spawn_enemy(mut commands: Commands, assets: Res<AssetServer>) {
         })
         .insert(Collider)
         .insert(Speed(SPEED))
-        .insert(Health(HEALTH));
+        .insert(Health(HEALTH))
+        .insert(BoundaryTrigger(BOUNDARY_TRIGGER));
 }
 
 fn enemy_death(
