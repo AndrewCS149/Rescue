@@ -20,10 +20,7 @@ fn spawn_enemy(mut commands: Commands) {
             custom_size: Some(Vec2::new(30.0, 3.0)),
             ..default()
         },
-        transform: Transform {
-            translation: Vec3::new(0.0, 20.0, 0.0),
-            ..default()
-        },
+        transform: Transform::from_xyz(0.0, 20.0, 1.0),
         ..default()
     };
 
@@ -33,10 +30,7 @@ fn spawn_enemy(mut commands: Commands) {
             custom_size: Some(Vec2::new(30.0, 30.0)),
             ..default()
         },
-        transform: Transform {
-            translation: Vec3::new(200.0, 200.0, 0.0),
-            ..default()
-        },
+        transform: Transform::from_xyz(0.0, 100.0, 1.0),
         ..default()
     };
 

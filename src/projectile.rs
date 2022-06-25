@@ -51,7 +51,11 @@ fn spawn_projectile<T: Component>(
                     flip_y: image.1,
                     ..default()
                 },
-                transform: *transform,
+                transform: Transform::from_xyz(
+                    transform.translation.x,
+                    transform.translation.y,
+                    1.0,
+                ),
                 texture: assets.load(image.0),
                 ..default()
             };
