@@ -9,7 +9,6 @@ impl Plugin for AnimationPlugin {
     fn build(&self, app: &mut App) {
         app.add_system(animate_sprite)
             .add_system(change_animation::<Player>.before(animate_sprite));
-        // .add_system(change_animation::<Player>);
     }
 }
 
