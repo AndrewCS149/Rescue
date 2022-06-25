@@ -1,8 +1,9 @@
 use bevy::prelude::*;
 
-use crate::components::{Collider, Damage, Enemy, EntitySize, Health, Projectile};
+use crate::components::{Collider, Damage, Enemy, EntitySize, Health, Projectile, Speed};
 
 const HEALTH: f32 = 200.0;
+const SPEED: f32 = 150.0;
 const SIZE_X: f32 = 30.0;
 const SIZE_Y: f32 = 30.0;
 
@@ -46,6 +47,7 @@ fn spawn_enemy(mut commands: Commands, assets: Res<AssetServer>) {
             y: SIZE_Y,
         })
         .insert(Collider)
+        .insert(Speed(SPEED))
         .insert(Health(HEALTH));
 }
 
