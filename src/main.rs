@@ -1,6 +1,7 @@
 use bevy::prelude::*;
 
 mod animation;
+mod collision;
 mod components;
 mod enemy;
 mod map;
@@ -11,6 +12,7 @@ mod ranged_attack;
 mod setup;
 
 use animation::AnimationPlugin;
+use collision::CollisionPlugin;
 use enemy::EnemyPlugin;
 use map::MapPlugin;
 use melee_attack::MeleeAttackPlugin;
@@ -24,6 +26,7 @@ fn main() {
         .add_plugins(DefaultPlugins)
         .add_plugin(SetupPlugin)
         .add_plugin(EnemyPlugin)
+        .add_plugin(CollisionPlugin)
         .add_plugin(MeleeAttackPlugin)
         .add_plugin(AnimationPlugin)
         .add_plugin(MapPlugin)

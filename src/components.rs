@@ -19,6 +19,9 @@ pub enum Animation {
 }
 
 #[derive(Component)]
+pub struct Collider;
+
+#[derive(Component)]
 pub struct Damage(pub f32);
 
 #[derive(Component, Copy, Clone, Eq, PartialEq)]
@@ -49,6 +52,12 @@ pub struct Player;
 
 #[derive(Component)]
 pub struct Projectile;
+
+#[derive(Component)]
+pub struct EntitySize {
+    pub x: f32,
+    pub y: f32,
+}
 
 #[derive(Component)]
 pub struct Speed(pub f32);
