@@ -54,6 +54,12 @@ pub struct Player;
 pub struct Projectile;
 
 #[derive(Component)]
+pub struct EntitySize {
+    pub x: f32,
+    pub y: f32,
+}
+
+#[derive(Component)]
 pub struct Speed(pub f32);
 
 #[derive(Component)]

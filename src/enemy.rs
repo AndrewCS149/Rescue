@@ -1,15 +1,16 @@
 use bevy::prelude::*;
 
-use crate::components::{Damage, Enemy, Health, Projectile};
+use crate::components::{Collider, Damage, Enemy, EntitySize, Health, Projectile};
 
 const HEALTH: f32 = 200.0;
+const SIZE_X: f32 = 30.0;
+const SIZE_Y: f32 = 30.0;
 
 pub struct EnemyPlugin;
 
 impl Plugin for EnemyPlugin {
     fn build(&self, app: &mut App) {
         app.add_startup_system(spawn_enemy).add_system(enemy_death);
-        //     .add_system(physics::movement::<Player>);
     }
 }
 
@@ -27,7 +28,7 @@ fn spawn_enemy(mut commands: Commands) {
     let enemy = SpriteBundle {
         sprite: Sprite {
             color: Color::TOMATO,
-            custom_size: Some(Vec2::new(30.0, 30.0)),
+            custom_size: Some(Vec2::new(SIZE_X, SIZE_Y)),
             ..default()
         },
         transform: Transform::from_xyz(0.0, 100.0, 1.0),
@@ -40,6 +41,11 @@ fn spawn_enemy(mut commands: Commands) {
             parent.spawn_bundle(healthbar);
         })
         .insert(Enemy)
+        .insert(EntitySize {
+            x: SIZE_X,
+            y: SIZE_Y,
+        })
+        .insert(Collider)
         .insert(Health(HEALTH));
 }
 
