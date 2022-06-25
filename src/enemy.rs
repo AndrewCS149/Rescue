@@ -34,7 +34,7 @@ fn spawn_enemy(mut commands: Commands, assets: Res<AssetServer>) {
             custom_size: Some(Vec2::new(SIZE_X, SIZE_Y)),
             ..default()
         },
-        transform: Transform::from_xyz(0.0, 100.0, 1.0),
+        transform: Transform::from_xyz(300.0, 100.0, 1.0),
         texture: assets.load("chicken.png"),
         ..default()
     };
