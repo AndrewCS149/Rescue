@@ -26,26 +26,19 @@ pub fn animate_sprite(
         &mut Animation,
     )>,
 ) {
-    for (
-        mut timer,
-        index_range,
-        mut sprite,
-        is_moving,
-        mut is_attacking,
-        direction,
-        mut animation,
-    ) in query.iter_mut()
+    for (mut timer, idx_range, mut sprite, is_moving, mut is_attacking, direction, mut animation) in
+        query.iter_mut()
     {
         timer.tick(time.delta());
         if timer.just_finished() {
             // run attack animations if player is attacking
             if is_attacking.0 {
-                if !(index_range.0..index_range.1).contains(&sprite.index) {
-                    sprite.index = index_range.0 - 1;
-                } else if sprite.index == index_range.1 - 1 {
+                if !(idx_range.0..idx_range.1).contains(&sprite.index) {
+                    sprite.index = idx_range.0 - 1;
+                } else if sprite.index == idx_range.1 - 1 {
                     is_attacking.0 = false;
 
-                    // after attacking, reset the player sprite to the current facing direction
+                    // after attack animation is complete, reset the player sprite to the current facing direction
                     *animation = match direction {
                         Direction::Left => Animation::WalkLeft,
                         Direction::Right => Animation::WalkRight,
@@ -58,14 +51,14 @@ pub fn animate_sprite(
             }
             // run move animations if the player is actively moving
             else if is_moving.0 {
-                if !(index_range.0..index_range.1).contains(&sprite.index) {
-                    sprite.index = index_range.0;
+                if !(idx_range.0..idx_range.1).contains(&sprite.index) {
+                    sprite.index = idx_range.0;
                 } else {
                     sprite.index += 1;
                 }
             // if player is not moving, set the sprite index to the first frame in the current range of animation indexes
             } else {
-                sprite.index = index_range.0;
+                sprite.index = idx_range.0;
             }
         }
     }
@@ -75,8 +68,8 @@ pub fn animate_sprite(
 fn change_animation<T: Component>(
     mut player_query: Query<(&mut AnimationIndexRange, &Animation), With<T>>,
 ) {
-    for (mut index_range, animation) in player_query.iter_mut() {
-        *index_range = match animation {
+    for (mut idx_range, animation) in player_query.iter_mut() {
+        *idx_range = match animation {
             Animation::WalkDown => AnimationIndexRange(0, 3),
             Animation::WalkUp => AnimationIndexRange(4, 7),
             Animation::WalkLeft => AnimationIndexRange(8, 11),
