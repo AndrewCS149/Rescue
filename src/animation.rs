@@ -16,16 +16,26 @@ impl Plugin for AnimationPlugin {
 // https://github.com/bevyengine/bevy/blob/main/examples/2d/sprite_sheet.rs
 pub fn animate_sprite(
     time: Res<Time>,
-    // texture_atlases: Res<Assets<TextureAtlas>>,
     mut query: Query<(
         &mut AnimationTimer,
         &mut AnimationIndexRange,
         &mut TextureAtlasSprite,
         &IsMoving,
         &mut IsAttacking,
+        &Direction,
+        &mut Animation,
     )>,
 ) {
-    for (mut timer, index_range, mut sprite, is_moving, mut is_attacking) in query.iter_mut() {
+    for (
+        mut timer,
+        index_range,
+        mut sprite,
+        is_moving,
+        mut is_attacking,
+        direction,
+        mut animation,
+    ) in query.iter_mut()
+    {
         timer.tick(time.delta());
         if timer.just_finished() {
             // run attack animations if player is attacking
@@ -34,6 +44,13 @@ pub fn animate_sprite(
                     sprite.index = index_range.0 - 1;
                 } else if sprite.index == index_range.1 - 1 {
                     is_attacking.0 = false;
+
+                    *animation = match direction {
+                        Direction::Left => Animation::WalkLeft,
+                        Direction::Right => Animation::WalkRight,
+                        Direction::Up => Animation::WalkUp,
+                        Direction::Down => Animation::WalkDown,
+                    };
                 }
 
                 sprite.index += 1;
@@ -55,32 +72,20 @@ pub fn animate_sprite(
 
 // changes the current animations start index and end index
 fn change_animation<T: Component>(
-    mut player_query: Query<
-        (
-            &mut AnimationIndexRange,
-            &Direction,
-            &IsAttacking,
-            &Animation,
-        ),
-        With<T>,
-    >,
+    mut player_query: Query<(&mut AnimationIndexRange, &Animation), With<T>>,
 ) {
-    for (mut index_range, direction, is_attacking, animation) in player_query.iter_mut() {
-        *index_range = match is_attacking.0 {
-            true => match animation {
-                Animation::ShootRight => AnimationIndexRange(16, 19),
-                Animation::ShootLeft => AnimationIndexRange(20, 23),
-                Animation::ShootUp => AnimationIndexRange(24, 27),
-                Animation::ShootDown => AnimationIndexRange(28, 31),
-                Animation::MeleeLeft => AnimationIndexRange(32, 33),
-                Animation::MeleeRight => AnimationIndexRange(34, 35),
-            },
-            false => match direction {
-                Direction::Down => AnimationIndexRange(0, 3),
-                Direction::Up => AnimationIndexRange(4, 7),
-                Direction::Left => AnimationIndexRange(8, 11),
-                Direction::Right => AnimationIndexRange(12, 15),
-            },
+    for (mut index_range, animation) in player_query.iter_mut() {
+        *index_range = match animation {
+            Animation::WalkDown => AnimationIndexRange(0, 3),
+            Animation::WalkUp => AnimationIndexRange(4, 7),
+            Animation::WalkLeft => AnimationIndexRange(8, 11),
+            Animation::WalkRight => AnimationIndexRange(12, 15),
+            Animation::ShootRight => AnimationIndexRange(16, 19),
+            Animation::ShootLeft => AnimationIndexRange(20, 23),
+            Animation::ShootUp => AnimationIndexRange(24, 27),
+            Animation::ShootDown => AnimationIndexRange(28, 31),
+            Animation::MeleeLeft => AnimationIndexRange(32, 33),
+            Animation::MeleeRight => AnimationIndexRange(34, 35),
         };
     }
 }

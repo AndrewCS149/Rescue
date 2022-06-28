@@ -1,4 +1,6 @@
-use crate::components::{Direction, IsAttacking, IsMoving, IsSprinting, Player, Speed, Sprint};
+use crate::components::{
+    Animation, Direction, IsAttacking, IsMoving, IsSprinting, Player, Speed, Sprint,
+};
 use bevy::prelude::*;
 
 pub struct PhysicsPlugin;
@@ -21,15 +23,24 @@ fn movement<T: Component>(
             &mut Direction,
             &mut IsSprinting,
             &mut IsMoving,
+            &mut Animation,
             &IsAttacking,
         ),
         With<T>,
     >,
 ) {
-    if !query.single().6 .0 {
-        for (mut transform, speed, sprint, mut direction, mut is_sprinting, mut is_moving, _) in
-            query.iter_mut()
-        {
+    for (
+        mut transform,
+        speed,
+        sprint,
+        mut direction,
+        mut is_sprinting,
+        mut is_moving,
+        mut animation,
+        is_attacking,
+    ) in query.iter_mut()
+    {
+        if !is_attacking.0 {
             let mut new_pos = Vec3::new(0.0, 0.0, 0.0);
             let mut tmp_sprint = 1.0;
             is_sprinting.0 = false;
@@ -39,21 +50,25 @@ fn movement<T: Component>(
             if keys.pressed(KeyCode::A) {
                 new_pos.x = -1.0;
                 *direction = Direction::Left;
+                *animation = Animation::WalkLeft
             }
             // right
             else if keys.pressed(KeyCode::D) {
                 new_pos.x = 1.0;
                 *direction = Direction::Right;
+                *animation = Animation::WalkRight
             }
             // up
             else if keys.pressed(KeyCode::W) {
                 new_pos.y = 1.0;
                 *direction = Direction::Up;
+                *animation = Animation::WalkUp
             }
             // down
             else if keys.pressed(KeyCode::S) {
                 new_pos.y = -1.0;
                 *direction = Direction::Down;
+                *animation = Animation::WalkDown
             } else {
                 is_moving.0 = false;
             }
