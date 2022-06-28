@@ -45,6 +45,7 @@ pub fn animate_sprite(
                 } else if sprite.index == index_range.1 - 1 {
                     is_attacking.0 = false;
 
+                    // after attacking, reset the player sprite to the current facing direction
                     *animation = match direction {
                         Direction::Left => Animation::WalkLeft,
                         Direction::Right => Animation::WalkRight,

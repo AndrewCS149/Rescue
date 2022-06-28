@@ -3,6 +3,9 @@ use crate::components::{
 };
 use bevy::prelude::*;
 
+const SPEED: f32 = 1000.0;
+const DAMAGE: f32 = 25.0;
+
 pub struct RangedAttackPlugin;
 
 impl Plugin for RangedAttackPlugin {
@@ -64,8 +67,8 @@ fn spawn_projectile<T: Component>(
                 .spawn_bundle(sprite)
                 .insert(Projectile)
                 .insert(*direction)
-                .insert(Speed(1000.0))
-                .insert(Damage(25.0));
+                .insert(Speed(SPEED))
+                .insert(Damage(DAMAGE));
         }
     }
 }
