@@ -14,7 +14,7 @@ impl Plugin for RangedAttackPlugin {
         app.add_system(draw_bowstring)
             .add_system(shoot_arrow::<Player>)
             .add_system(arrow_movement)
-            .add_system(despawn_projectile);
+            .add_system(despawn_arrow);
     }
 }
 
@@ -121,7 +121,7 @@ fn arrow_movement(
 }
 
 // despawn the projectile if it is outside of the window bounds
-fn despawn_projectile(
+fn despawn_arrow(
     mut commands: Commands,
     mut windows: ResMut<Windows>,
     projectile: Query<(Entity, &Transform), With<Projectile>>,
