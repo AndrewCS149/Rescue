@@ -1,5 +1,6 @@
 use crate::components::{
-    Animation, Damage, Direction, IsAttacking, IsSprinting, Player, Projectile, Speed,
+    Animation, AnimationIndexRange, AnimationTimer, Damage, Direction, IsAttacking, IsMoving,
+    IsSprinting, Player, Projectile, Speed,
 };
 use bevy::prelude::*;
 
@@ -10,43 +11,71 @@ pub struct RangedAttackPlugin;
 
 impl Plugin for RangedAttackPlugin {
     fn build(&self, app: &mut App) {
-        app.add_system(spawn_projectile::<Player>)
-            .add_system(projectile_movement)
+        app.add_system(draw_bowstring)
+            .add_system(shoot_arrow::<Player>)
+            .add_system(arrow_movement)
             .add_system(despawn_projectile);
     }
 }
 
-// spawns a projectile (arrow) every time the player pressed the fire (space) key
-fn spawn_projectile<T: Component>(
-    mut commands: Commands,
+// draws the bowstring while the player is holding 'J'
+fn draw_bowstring(
     keys: Res<Input<KeyCode>>,
+    mut query: Query<(&Direction, &mut IsAttacking, &mut Animation), With<Player>>,
+) {
+    for (direction, mut is_attacking, mut animation) in query.iter_mut() {
+        if keys.pressed(KeyCode::J) {
+            is_attacking.0 = true;
+
+            *animation = match direction {
+                Direction::Left => Animation::ShootLeft,
+                Direction::Right => Animation::ShootRight,
+                Direction::Up => Animation::ShootUp,
+                Direction::Down => Animation::ShootDown,
+            };
+        } else {
+            is_attacking.0 = false;
+
+            *animation = match direction {
+                Direction::Left => Animation::WalkLeft,
+                Direction::Right => Animation::WalkRight,
+                Direction::Up => Animation::WalkUp,
+                Direction::Down => Animation::WalkDown,
+            };
+        }
+    }
+}
+
+// shoots an arrow after the player has drawn the bowstring and released 'J'
+fn shoot_arrow<T: Component>(
+    mut commands: Commands,
     assets: Res<AssetServer>,
+    keys: Res<Input<KeyCode>>,
     mut query: Query<
         (
             &Transform,
             &Direction,
             &IsSprinting,
             &mut IsAttacking,
-            &mut Animation,
+            &TextureAtlasSprite,
+            &AnimationIndexRange,
         ),
         With<T>,
     >,
 ) {
-    for (transform, direction, is_sprinting, mut is_attacking, mut animation) in query.iter_mut() {
-        // if the player has pressed the fire (space) button, is not sprinting and is not already attacking
-        if keys.just_pressed(KeyCode::J) && !is_sprinting.0 && !is_attacking.0 {
-            is_attacking.0 = true;
+    for (transform, direction, is_sprinting, mut is_attacking, sprite, idx_range) in
+        query.iter_mut()
+    {
+        if keys.just_released(KeyCode::J) && !is_sprinting.0 && sprite.index == idx_range.1 - 1 {
+            is_attacking.0 = false;
 
             // based on which direction the arrow is moving, choose either the X or Y arrow image and flip it if needed
-            // change appropriate animation enum
-            let (image, anim) = match direction {
-                Direction::Left => (("arrowX.png", true), Animation::ShootLeft),
-                Direction::Right => (("arrowX.png", false), Animation::ShootRight),
-                Direction::Up => (("arrowY.png", false), Animation::ShootUp),
-                Direction::Down => (("arrowY.png", true), Animation::ShootDown),
+            let image = match direction {
+                Direction::Left => ("arrowX.png", true),
+                Direction::Right => ("arrowX.png", false),
+                Direction::Up => ("arrowY.png", false),
+                Direction::Down => ("arrowY.png", true),
             };
-
-            *animation = anim;
 
             let sprite = SpriteBundle {
                 sprite: Sprite {
@@ -74,7 +103,7 @@ fn spawn_projectile<T: Component>(
 }
 
 // controls the movement and directions of the projectiles
-fn projectile_movement(
+fn arrow_movement(
     time: Res<Time>,
     mut query: Query<(&mut Transform, &Direction, &Speed), With<Projectile>>,
 ) {

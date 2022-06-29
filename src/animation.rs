@@ -12,52 +12,41 @@ impl Plugin for AnimationPlugin {
     }
 }
 
-// taken from the Bevy Github 2d spritesheet example
-// https://github.com/bevyengine/bevy/blob/main/examples/2d/sprite_sheet.rs
-pub fn animate_sprite(
+fn animate_sprite(
     time: Res<Time>,
     mut query: Query<(
         &mut AnimationTimer,
         &mut AnimationIndexRange,
         &mut TextureAtlasSprite,
         &IsMoving,
-        &mut IsAttacking,
+        &IsAttacking,
         &Direction,
         &mut Animation,
     )>,
 ) {
-    for (mut timer, idx_range, mut sprite, is_moving, mut is_attacking, direction, mut animation) in
+    for (mut timer, idx_range, mut sprite, is_moving, is_attacking, direction, mut animation) in
         query.iter_mut()
     {
         timer.tick(time.delta());
         if timer.just_finished() {
-            // run attack animations if player is attacking
-            if is_attacking.0 {
-                if !(idx_range.0..idx_range.1).contains(&sprite.index) {
-                    sprite.index = idx_range.0 - 1;
-                } else if sprite.index == idx_range.1 - 1 {
-                    is_attacking.0 = false;
-
-                    // after attack animation is complete, reset the player sprite to the current facing direction
-                    *animation = match direction {
-                        Direction::Left => Animation::WalkLeft,
-                        Direction::Right => Animation::WalkRight,
-                        Direction::Up => Animation::WalkUp,
-                        Direction::Down => Animation::WalkDown,
-                    };
-                }
-
-                sprite.index += 1;
-            }
-            // run move animations if the player is actively moving
-            else if is_moving.0 {
-                if !(idx_range.0..idx_range.1).contains(&sprite.index) {
+            println!(
+                "cur_idx: {}, idx_rng {} {}",
+                sprite.index, idx_range.0, idx_range.1
+            );
+            if is_attacking.0 || is_moving.0 {
+                if !(idx_range.0..=idx_range.1).contains(&sprite.index) {
                     sprite.index = idx_range.0;
+                } else if sprite.index == idx_range.1 && is_attacking.0 {
+                } else if sprite.index == idx_range.1 - 1 && is_attacking.0 {
+                    // sprite.index += 1;
                 } else {
                     sprite.index += 1;
                 }
-            // if player is not moving, set the sprite index to the first frame in the current range of animation indexes
             } else {
+                sprite.index = idx_range.0;
+            }
+
+            if sprite.index > idx_range.1 {
                 sprite.index = idx_range.0;
             }
         }
