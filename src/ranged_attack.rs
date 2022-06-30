@@ -1,6 +1,5 @@
 use crate::components::{
-    Animation, AnimationIndexRange, Arrow, Damage, Direction, IsAttacking, IsSprinting, Player,
-    Speed,
+    Action, Animation, AnimationIndexRange, Arrow, Damage, Direction, Player, Speed,
 };
 use bevy::prelude::*;
 
@@ -21,12 +20,12 @@ impl Plugin for RangedAttackPlugin {
 // draws the bowstring while the player is holding 'J'
 fn draw_bowstring(
     keys: Res<Input<KeyCode>>,
-    mut query: Query<(&Direction, &mut IsAttacking, &mut Animation), With<Player>>,
+    mut query: Query<(&Direction, &mut Animation, &mut Action), With<Player>>,
 ) {
-    for (direction, mut is_attacking, mut animation) in query.iter_mut() {
+    for (direction, mut animation, mut action) in query.iter_mut() {
         // if user is holding fire (J) key, begin the draw bowstring/shooting animation
         if keys.pressed(KeyCode::J) {
-            is_attacking.0 = true;
+            *action = Action::RangedAttack;
 
             *animation = match direction {
                 Direction::Left => Animation::ShootLeft,
@@ -36,8 +35,6 @@ fn draw_bowstring(
             };
         // if user releases fire key before bow is fully drawn, reset to walking animation
         } else {
-            is_attacking.0 = false;
-
             *animation = match direction {
                 Direction::Left => Animation::WalkLeft,
                 Direction::Right => Animation::WalkRight,
@@ -57,20 +54,20 @@ fn shoot_arrow<T: Component>(
         (
             &Transform,
             &Direction,
-            &IsSprinting,
-            &mut IsAttacking,
             &mut TextureAtlasSprite,
             &AnimationIndexRange,
+            &mut Action,
         ),
         With<T>,
     >,
 ) {
-    for (transform, direction, is_sprinting, mut is_attacking, mut sprite, idx_range) in
-        query.iter_mut()
-    {
+    for (transform, direction, mut sprite, idx_range, mut action) in query.iter_mut() {
         // if player is not sprinting and has released the fire (J) key while the bow is fully draw (sprite.idx == idx_rng.1 - 1)
-        if keys.just_released(KeyCode::J) && !is_sprinting.0 && sprite.index == idx_range.1 - 1 {
-            is_attacking.0 = false;
+        if keys.just_released(KeyCode::J)
+            && *action != Action::Sprint
+            && sprite.index == idx_range.1 - 1
+        {
+            *action = Action::Idle;
             sprite.index += 1;
 
             // based on which direction the arrow is moving, choose either the X or Y arrow image and flip it if needed
