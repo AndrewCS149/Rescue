@@ -25,10 +25,6 @@ fn animate_sprite(
     for (mut timer, idx_range, mut sprite, is_moving, is_attacking) in query.iter_mut() {
         timer.tick(time.delta());
         if timer.just_finished() {
-            println!(
-                "cur_idx: {}, idx_rng {} {}",
-                sprite.index, idx_range.0, idx_range.1
-            );
             if is_attacking.0 || is_moving.0 {
                 if !(idx_range.0..=idx_range.1).contains(&sprite.index) {
                     sprite.index = idx_range.0;

@@ -24,6 +24,7 @@ fn draw_bowstring(
     mut query: Query<(&Direction, &mut IsAttacking, &mut Animation), With<Player>>,
 ) {
     for (direction, mut is_attacking, mut animation) in query.iter_mut() {
+        // if user is holding fire (J) key, begin the draw bowstring/shooting animation
         if keys.pressed(KeyCode::J) {
             is_attacking.0 = true;
 
@@ -33,6 +34,7 @@ fn draw_bowstring(
                 Direction::Up => Animation::ShootUp,
                 Direction::Down => Animation::ShootDown,
             };
+        // if user releases fire key before bow is fully drawn, reset to walking animation
         } else {
             is_attacking.0 = false;
 
@@ -66,6 +68,7 @@ fn shoot_arrow<T: Component>(
     for (transform, direction, is_sprinting, mut is_attacking, mut sprite, idx_range) in
         query.iter_mut()
     {
+        // if player is not sprinting and has released the fire (J) key while the bow is fully draw (sprite.idx == idx_rng.1 - 1)
         if keys.just_released(KeyCode::J) && !is_sprinting.0 && sprite.index == idx_range.1 - 1 {
             is_attacking.0 = false;
             sprite.index += 1;
@@ -78,6 +81,7 @@ fn shoot_arrow<T: Component>(
                 Direction::Down => ("arrowY.png", true),
             };
 
+            // create an arrow
             let arrow = SpriteBundle {
                 sprite: Sprite {
                     flip_x: image.1,
@@ -109,7 +113,7 @@ fn arrow_movement(
     mut query: Query<(&mut Transform, &Direction, &Speed), With<Arrow>>,
 ) {
     for (mut transform, direction, speed) in query.iter_mut() {
-        // move the projectile in the direction of the host's current direction
+        // move the projectile in the direction of the player's current direction
         let new_pos = match direction {
             Direction::Left => Vec3::new(-1.0, 0.0, 0.0),
             Direction::Right => Vec3::new(1.0, 0.0, 0.0),
