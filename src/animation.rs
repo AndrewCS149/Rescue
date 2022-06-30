@@ -32,9 +32,8 @@ fn animate_sprite(
             if is_attacking.0 || is_moving.0 {
                 if !(idx_range.0..=idx_range.1).contains(&sprite.index) {
                     sprite.index = idx_range.0;
-                } else if sprite.index == idx_range.1 && is_attacking.0 {
-                } else if sprite.index == idx_range.1 - 1 && is_attacking.0 {
-                    // sprite.index += 1;
+                } else if (idx_range.1 - 1..=idx_range.1).contains(&sprite.index) && is_attacking.0
+                {
                 } else {
                     sprite.index += 1;
                 }
