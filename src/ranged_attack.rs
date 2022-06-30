@@ -50,6 +50,7 @@ fn shoot_arrow<T: Component>(
     mut commands: Commands,
     assets: Res<AssetServer>,
     keys: Res<Input<KeyCode>>,
+    audio: Res<Audio>,
     mut query: Query<
         (
             &Transform,
@@ -68,15 +69,20 @@ fn shoot_arrow<T: Component>(
             && sprite.index == idx_range.1 - 1
         {
             *action = Action::Idle;
+
+            // increase idx to play final frame
             sprite.index += 1;
 
-            // based on which direction the arrow is moving, choose either the X or Y arrow image and flip it if needed
+            // based on which direction the player is currently facing, choose either the X or Y arrow image and flip it if needed
             let image = match direction {
                 Direction::Left => ("arrowX.png", true),
                 Direction::Right => ("arrowX.png", false),
                 Direction::Up => ("arrowY.png", false),
                 Direction::Down => ("arrowY.png", true),
             };
+
+            // play fire arrow sound effect
+            audio.play(assets.load("fire_arrow.ogg"));
 
             // create an arrow
             let arrow = SpriteBundle {
