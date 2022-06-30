@@ -81,6 +81,7 @@ fn shoot_arrow<T: Component>(
                 Direction::Down => ("arrowY.png", true),
             };
 
+            // play fire arrow sound effect
             audio.play(assets.load("fire_arrow.ogg"));
 
             // create an arrow
