@@ -1,5 +1,6 @@
 use crate::components::{
-    Animation, Damage, Direction, IsAttacking, IsSprinting, Player, Projectile, Speed,
+    Animation, AnimationIndexRange, Arrow, Damage, Direction, IsAttacking, IsSprinting, Player,
+    Speed,
 };
 use bevy::prelude::*;
 
@@ -10,45 +11,78 @@ pub struct RangedAttackPlugin;
 
 impl Plugin for RangedAttackPlugin {
     fn build(&self, app: &mut App) {
-        app.add_system(spawn_projectile::<Player>)
-            .add_system(projectile_movement)
-            .add_system(despawn_projectile);
+        app.add_system(draw_bowstring)
+            .add_system(shoot_arrow::<Player>)
+            .add_system(arrow_movement)
+            .add_system(despawn_arrow);
     }
 }
 
-// spawns a projectile (arrow) every time the player pressed the fire (space) key
-fn spawn_projectile<T: Component>(
-    mut commands: Commands,
+// draws the bowstring while the player is holding 'J'
+fn draw_bowstring(
     keys: Res<Input<KeyCode>>,
+    mut query: Query<(&Direction, &mut IsAttacking, &mut Animation), With<Player>>,
+) {
+    for (direction, mut is_attacking, mut animation) in query.iter_mut() {
+        // if user is holding fire (J) key, begin the draw bowstring/shooting animation
+        if keys.pressed(KeyCode::J) {
+            is_attacking.0 = true;
+
+            *animation = match direction {
+                Direction::Left => Animation::ShootLeft,
+                Direction::Right => Animation::ShootRight,
+                Direction::Up => Animation::ShootUp,
+                Direction::Down => Animation::ShootDown,
+            };
+        // if user releases fire key before bow is fully drawn, reset to walking animation
+        } else {
+            is_attacking.0 = false;
+
+            *animation = match direction {
+                Direction::Left => Animation::WalkLeft,
+                Direction::Right => Animation::WalkRight,
+                Direction::Up => Animation::WalkUp,
+                Direction::Down => Animation::WalkDown,
+            };
+        }
+    }
+}
+
+// shoots an arrow after the player has drawn the bowstring and released 'J'
+fn shoot_arrow<T: Component>(
+    mut commands: Commands,
     assets: Res<AssetServer>,
+    keys: Res<Input<KeyCode>>,
     mut query: Query<
         (
             &Transform,
             &Direction,
             &IsSprinting,
             &mut IsAttacking,
-            &mut Animation,
+            &mut TextureAtlasSprite,
+            &AnimationIndexRange,
         ),
         With<T>,
     >,
 ) {
-    for (transform, direction, is_sprinting, mut is_attacking, mut animation) in query.iter_mut() {
-        // if the player has pressed the fire (space) button, is not sprinting and is not already attacking
-        if keys.just_pressed(KeyCode::J) && !is_sprinting.0 && !is_attacking.0 {
-            is_attacking.0 = true;
+    for (transform, direction, is_sprinting, mut is_attacking, mut sprite, idx_range) in
+        query.iter_mut()
+    {
+        // if player is not sprinting and has released the fire (J) key while the bow is fully draw (sprite.idx == idx_rng.1 - 1)
+        if keys.just_released(KeyCode::J) && !is_sprinting.0 && sprite.index == idx_range.1 - 1 {
+            is_attacking.0 = false;
+            sprite.index += 1;
 
             // based on which direction the arrow is moving, choose either the X or Y arrow image and flip it if needed
-            // change appropriate animation enum
-            let (image, anim) = match direction {
-                Direction::Left => (("arrowX.png", true), Animation::ShootLeft),
-                Direction::Right => (("arrowX.png", false), Animation::ShootRight),
-                Direction::Up => (("arrowY.png", false), Animation::ShootUp),
-                Direction::Down => (("arrowY.png", true), Animation::ShootDown),
+            let image = match direction {
+                Direction::Left => ("arrowX.png", true),
+                Direction::Right => ("arrowX.png", false),
+                Direction::Up => ("arrowY.png", false),
+                Direction::Down => ("arrowY.png", true),
             };
 
-            *animation = anim;
-
-            let sprite = SpriteBundle {
+            // create an arrow
+            let arrow = SpriteBundle {
                 sprite: Sprite {
                     flip_x: image.1,
                     flip_y: image.1,
@@ -64,8 +98,8 @@ fn spawn_projectile<T: Component>(
             };
 
             commands
-                .spawn_bundle(sprite)
-                .insert(Projectile)
+                .spawn_bundle(arrow)
+                .insert(Arrow)
                 .insert(*direction)
                 .insert(Speed(SPEED))
                 .insert(Damage(DAMAGE));
@@ -74,12 +108,12 @@ fn spawn_projectile<T: Component>(
 }
 
 // controls the movement and directions of the projectiles
-fn projectile_movement(
+fn arrow_movement(
     time: Res<Time>,
-    mut query: Query<(&mut Transform, &Direction, &Speed), With<Projectile>>,
+    mut query: Query<(&mut Transform, &Direction, &Speed), With<Arrow>>,
 ) {
     for (mut transform, direction, speed) in query.iter_mut() {
-        // move the projectile in the direction of the host's current direction
+        // move the projectile in the direction of the player's current direction
         let new_pos = match direction {
             Direction::Left => Vec3::new(-1.0, 0.0, 0.0),
             Direction::Right => Vec3::new(1.0, 0.0, 0.0),
@@ -92,10 +126,10 @@ fn projectile_movement(
 }
 
 // despawn the projectile if it is outside of the window bounds
-fn despawn_projectile(
+fn despawn_arrow(
     mut commands: Commands,
     mut windows: ResMut<Windows>,
-    projectile: Query<(Entity, &Transform), With<Projectile>>,
+    projectile: Query<(Entity, &Transform), With<Arrow>>,
 ) {
     for (projectile, transform) in projectile.iter() {
         let window = windows.get_primary_mut().unwrap();

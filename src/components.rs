@@ -1,5 +1,8 @@
 use bevy::prelude::*;
 
+#[derive(Component)]
+pub struct Arrow;
+
 #[derive(Component, Deref, DerefMut)]
 pub struct AnimationTimer(pub Timer);
 
@@ -56,9 +59,6 @@ pub struct IsSprinting(pub bool);
 
 #[derive(Component)]
 pub struct Player;
-
-#[derive(Component)]
-pub struct Projectile;
 
 #[derive(Component)]
 pub struct EntitySize {
