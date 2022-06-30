@@ -1,5 +1,5 @@
 use crate::components::{
-    Animation, Direction, IsAttacking, IsMoving, IsSprinting, Player, Speed, Sprint,
+    Action, Animation, Direction, IsMoving, IsSprinting, Player, Speed, Sprint,
 };
 use bevy::prelude::*;
 
@@ -24,7 +24,7 @@ fn movement<T: Component>(
             &mut IsSprinting,
             &mut IsMoving,
             &mut Animation,
-            &IsAttacking,
+            &Action,
         ),
         With<T>,
     >,
@@ -37,10 +37,11 @@ fn movement<T: Component>(
         mut is_sprinting,
         mut is_moving,
         mut animation,
-        is_attacking,
+        action,
     ) in query.iter_mut()
     {
-        if !is_attacking.0 {
+        // if !is_attacking.0 {
+        if *action == Action::Walk {
             let mut new_pos = Vec3::new(0.0, 0.0, 0.0);
             let mut tmp_sprint = 1.0;
             is_sprinting.0 = false;

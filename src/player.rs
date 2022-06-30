@@ -1,5 +1,5 @@
 use crate::components::{
-    Animation, AnimationIndexRange, AnimationTimer, Collider, Direction, EntitySize, IsAttacking,
+    Action, Animation, AnimationIndexRange, AnimationTimer, Collider, Direction, EntitySize,
     IsMoving, IsSprinting, Player, Speed, Sprint,
 };
 use bevy::prelude::*;
@@ -46,7 +46,7 @@ fn spawn_player(
         .insert(Sprint(1.5))
         .insert(Direction::Down)
         .insert(Animation::ShootLeft)
-        .insert(IsAttacking(false))
+        .insert(Action::Walk)
         .insert(IsSprinting(false))
         .insert(IsMoving(false));
 }

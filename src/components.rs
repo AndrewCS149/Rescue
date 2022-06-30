@@ -9,6 +9,15 @@ pub struct AnimationTimer(pub Timer);
 #[derive(Component)]
 pub struct AnimationIndexRange(pub usize, pub usize);
 
+// describes which action the host is currently doing
+#[derive(Component, Copy, Clone, Eq, PartialEq)]
+pub enum Action {
+    Interact,
+    MeleeAttack,
+    RangedAttack,
+    Walk,
+}
+
 #[derive(Component)]
 pub enum Animation {
     MeleeRight,
@@ -47,9 +56,6 @@ pub struct Enemy;
 
 #[derive(Component)]
 pub struct Health(pub f32);
-
-#[derive(Component)]
-pub struct IsAttacking(pub bool);
 
 #[derive(Component)]
 pub struct IsMoving(pub bool);
