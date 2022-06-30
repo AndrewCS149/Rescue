@@ -26,15 +26,15 @@ fn draw_bowstring(
         // if user is holding fire (J) key, begin the draw bowstring/shooting animation
         if keys.pressed(KeyCode::J) {
             *action = Action::RangedAttack;
-
             *animation = match direction {
                 Direction::Left => Animation::ShootLeft,
                 Direction::Right => Animation::ShootRight,
                 Direction::Up => Animation::ShootUp,
                 Direction::Down => Animation::ShootDown,
             };
-        // if user releases fire key before bow is fully drawn, reset to walking animation
-        } else {
+        // if user releases fire key before bow is fully drawn, reset to idle
+        } else if keys.just_released(KeyCode::J) {
+            *action = Action::Idle;
             *animation = match direction {
                 Direction::Left => Animation::WalkLeft,
                 Direction::Right => Animation::WalkRight,
