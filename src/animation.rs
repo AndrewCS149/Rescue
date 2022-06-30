@@ -1,5 +1,5 @@
 use crate::components::{
-    Animation, AnimationIndexRange, AnimationTimer, Direction, IsAttacking, IsMoving, Player,
+    Animation, AnimationIndexRange, AnimationTimer, IsAttacking, IsMoving, Player,
 };
 use bevy::prelude::*;
 
@@ -20,13 +20,9 @@ fn animate_sprite(
         &mut TextureAtlasSprite,
         &IsMoving,
         &IsAttacking,
-        &Direction,
-        &mut Animation,
     )>,
 ) {
-    for (mut timer, idx_range, mut sprite, is_moving, is_attacking, direction, mut animation) in
-        query.iter_mut()
-    {
+    for (mut timer, idx_range, mut sprite, is_moving, is_attacking) in query.iter_mut() {
         timer.tick(time.delta());
         if timer.just_finished() {
             println!(

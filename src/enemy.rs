@@ -1,7 +1,7 @@
 use bevy::prelude::*;
 
 use crate::components::{
-    BoundaryTrigger, Collider, Damage, Enemy, EntitySize, Health, Projectile, Speed,
+    Arrow, BoundaryTrigger, Collider, Damage, Enemy, EntitySize, Health, Speed,
 };
 
 const HEALTH: f32 = 200.0;
@@ -57,14 +57,14 @@ fn spawn_enemy(mut commands: Commands, assets: Res<AssetServer>) {
 
 fn enemy_death(
     mut commands: Commands,
-    projectile_query: Query<(Entity, &Transform, &Damage), With<Projectile>>,
+    projectile_query: Query<(Entity, &Transform, &Damage), With<Arrow>>,
     mut enemy_query: Query<(
         Entity,
         &Transform,
         &Sprite,
         &mut Health,
         With<Enemy>,
-        Without<Projectile>,
+        Without<Arrow>,
     )>,
 ) {
     if let Some((projectile, projectile_pos, damage)) = projectile_query.iter().next() {

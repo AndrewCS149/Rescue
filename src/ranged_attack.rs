@@ -1,6 +1,6 @@
 use crate::components::{
-    Animation, AnimationIndexRange, AnimationTimer, Damage, Direction, IsAttacking, IsMoving,
-    IsSprinting, Player, Projectile, Speed,
+    Animation, AnimationIndexRange, Arrow, Damage, Direction, IsAttacking, IsSprinting, Player,
+    Speed,
 };
 use bevy::prelude::*;
 
@@ -57,17 +57,18 @@ fn shoot_arrow<T: Component>(
             &Direction,
             &IsSprinting,
             &mut IsAttacking,
-            &TextureAtlasSprite,
+            &mut TextureAtlasSprite,
             &AnimationIndexRange,
         ),
         With<T>,
     >,
 ) {
-    for (transform, direction, is_sprinting, mut is_attacking, sprite, idx_range) in
+    for (transform, direction, is_sprinting, mut is_attacking, mut sprite, idx_range) in
         query.iter_mut()
     {
         if keys.just_released(KeyCode::J) && !is_sprinting.0 && sprite.index == idx_range.1 - 1 {
             is_attacking.0 = false;
+            sprite.index += 1;
 
             // based on which direction the arrow is moving, choose either the X or Y arrow image and flip it if needed
             let image = match direction {
@@ -77,7 +78,7 @@ fn shoot_arrow<T: Component>(
                 Direction::Down => ("arrowY.png", true),
             };
 
-            let sprite = SpriteBundle {
+            let arrow = SpriteBundle {
                 sprite: Sprite {
                     flip_x: image.1,
                     flip_y: image.1,
@@ -93,8 +94,8 @@ fn shoot_arrow<T: Component>(
             };
 
             commands
-                .spawn_bundle(sprite)
-                .insert(Projectile)
+                .spawn_bundle(arrow)
+                .insert(Arrow)
                 .insert(*direction)
                 .insert(Speed(SPEED))
                 .insert(Damage(DAMAGE));
@@ -105,7 +106,7 @@ fn shoot_arrow<T: Component>(
 // controls the movement and directions of the projectiles
 fn arrow_movement(
     time: Res<Time>,
-    mut query: Query<(&mut Transform, &Direction, &Speed), With<Projectile>>,
+    mut query: Query<(&mut Transform, &Direction, &Speed), With<Arrow>>,
 ) {
     for (mut transform, direction, speed) in query.iter_mut() {
         // move the projectile in the direction of the host's current direction
@@ -124,7 +125,7 @@ fn arrow_movement(
 fn despawn_arrow(
     mut commands: Commands,
     mut windows: ResMut<Windows>,
-    projectile: Query<(Entity, &Transform), With<Projectile>>,
+    projectile: Query<(Entity, &Transform), With<Arrow>>,
 ) {
     for (projectile, transform) in projectile.iter() {
         let window = windows.get_primary_mut().unwrap();
