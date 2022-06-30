@@ -22,21 +22,19 @@ fn animate_sprite(
     for (mut timer, idx_range, mut sprite, action) in query.iter_mut() {
         timer.tick(time.delta());
         if timer.just_finished() {
-            if *action == Action::RangedAttack
-                || *action == Action::Walk
-                || *action == Action::Sprint
-            {
-                if !(idx_range.0..=idx_range.1).contains(&sprite.index) {
-                    sprite.index = idx_range.0;
-                } else if (idx_range.1 - 1..=idx_range.1).contains(&sprite.index)
-                    && *action == Action::RangedAttack
-                {
-                } else {
-                    sprite.index += 1;
+            match *action {
+                Action::RangedAttack | Action::Walk | Action::Sprint => {
+                    if !(idx_range.0..=idx_range.1).contains(&sprite.index) {
+                        sprite.index = idx_range.0;
+                    } else if (idx_range.1 - 1..=idx_range.1).contains(&sprite.index)
+                        && *action == Action::RangedAttack
+                    {
+                    } else {
+                        sprite.index += 1;
+                    }
                 }
-            } else {
-                sprite.index = idx_range.0;
-            }
+                _ => sprite.index = idx_range.0,
+            };
 
             if sprite.index > idx_range.1 {
                 sprite.index = idx_range.0;
