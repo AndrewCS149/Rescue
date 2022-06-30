@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 
-use crate::components::{Action, Animation, Direction, IsSprinting, Player};
+use crate::components::{Action, Animation, Direction, Player};
 
 pub struct MeleeAttackPlugin;
 
@@ -12,10 +12,10 @@ impl Plugin for MeleeAttackPlugin {
 
 fn attack<T: Component>(
     keys: Res<Input<KeyCode>>,
-    mut query: Query<(&Direction, &IsSprinting, &mut Action, &mut Animation), With<T>>,
+    mut query: Query<(&Direction, &mut Action, &mut Animation), With<T>>,
 ) {
-    for (direction, is_sprinting, mut action, mut animation) in query.iter_mut() {
-        if keys.just_pressed(KeyCode::Space) && !is_sprinting.0 && *action != Action::MeleeAttack {
+    for (direction, mut action, mut animation) in query.iter_mut() {
+        if keys.just_pressed(KeyCode::Space) && *action != Action::MeleeAttack {
             *action = Action::MeleeAttack;
 
             *animation = match direction {

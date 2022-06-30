@@ -1,4 +1,4 @@
-use crate::components::{Action, Animation, AnimationIndexRange, AnimationTimer, IsMoving, Player};
+use crate::components::{Action, Animation, AnimationIndexRange, AnimationTimer, Player};
 use bevy::prelude::*;
 
 pub struct AnimationPlugin;
@@ -16,15 +16,16 @@ fn animate_sprite(
         &mut AnimationTimer,
         &mut AnimationIndexRange,
         &mut TextureAtlasSprite,
-        &IsMoving,
         &Action,
     )>,
 ) {
-    for (mut timer, idx_range, mut sprite, is_moving, action) in query.iter_mut() {
+    for (mut timer, idx_range, mut sprite, action) in query.iter_mut() {
         timer.tick(time.delta());
         if timer.just_finished() {
-            // if is_attacking.0 || is_moving.0 {
-            if *action == Action::RangedAttack || is_moving.0 {
+            if *action == Action::RangedAttack
+                || *action == Action::Walk
+                || *action == Action::Sprint
+            {
                 if !(idx_range.0..=idx_range.1).contains(&sprite.index) {
                     sprite.index = idx_range.0;
                 } else if (idx_range.1 - 1..=idx_range.1).contains(&sprite.index)

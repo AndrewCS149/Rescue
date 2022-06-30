@@ -1,6 +1,4 @@
-use crate::components::{
-    Action, Animation, Direction, IsMoving, IsSprinting, Player, Speed, Sprint,
-};
+use crate::components::{Action, Animation, Direction, Player, Speed, Sprint};
 use bevy::prelude::*;
 
 pub struct PhysicsPlugin;
@@ -21,63 +19,54 @@ fn movement<T: Component>(
             &Speed,
             &Sprint,
             &mut Direction,
-            &mut IsSprinting,
-            &mut IsMoving,
             &mut Animation,
-            &Action,
+            &mut Action,
         ),
         With<T>,
     >,
 ) {
-    for (
-        mut transform,
-        speed,
-        sprint,
-        mut direction,
-        mut is_sprinting,
-        mut is_moving,
-        mut animation,
-        action,
-    ) in query.iter_mut()
+    for (mut transform, speed, sprint, mut direction, mut animation, mut action) in query.iter_mut()
     {
-        // if !is_attacking.0 {
-        if *action == Action::Walk {
+        if *action == Action::Idle || *action == Action::Walk || *action == Action::Sprint {
             let mut new_pos = Vec3::new(0.0, 0.0, 0.0);
             let mut tmp_sprint = 1.0;
-            is_sprinting.0 = false;
-            is_moving.0 = true;
+            *action = Action::Walk;
 
             // left
             if keys.pressed(KeyCode::A) {
                 new_pos.x = -1.0;
                 *direction = Direction::Left;
-                *animation = Animation::WalkLeft
+                *animation = Animation::WalkLeft;
+                *action = Action::Walk;
             }
             // right
             else if keys.pressed(KeyCode::D) {
                 new_pos.x = 1.0;
                 *direction = Direction::Right;
-                *animation = Animation::WalkRight
+                *animation = Animation::WalkRight;
+                *action = Action::Walk;
             }
             // up
             else if keys.pressed(KeyCode::W) {
                 new_pos.y = 1.0;
                 *direction = Direction::Up;
-                *animation = Animation::WalkUp
+                *animation = Animation::WalkUp;
+                *action = Action::Walk;
             }
             // down
             else if keys.pressed(KeyCode::S) {
                 new_pos.y = -1.0;
                 *direction = Direction::Down;
-                *animation = Animation::WalkDown
+                *animation = Animation::WalkDown;
+                *action = Action::Walk;
             } else {
-                is_moving.0 = false;
+                *action = Action::Idle;
             }
 
             // sprint
-            if keys.pressed(KeyCode::LShift) {
+            if keys.pressed(KeyCode::LShift) && *action == Action::Walk {
                 tmp_sprint = sprint.0;
-                is_sprinting.0 = true;
+                *action = Action::Sprint;
             }
 
             transform.translation += new_pos * speed.0 * tmp_sprint * time.delta_seconds();

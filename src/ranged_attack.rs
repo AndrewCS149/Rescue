@@ -1,5 +1,5 @@
 use crate::components::{
-    Action, Animation, AnimationIndexRange, Arrow, Damage, Direction, IsSprinting, Player, Speed,
+    Action, Animation, AnimationIndexRange, Arrow, Damage, Direction, Player, Speed,
 };
 use bevy::prelude::*;
 
@@ -35,8 +35,6 @@ fn draw_bowstring(
             };
         // if user releases fire key before bow is fully drawn, reset to walking animation
         } else {
-            *action = Action::Walk;
-
             *animation = match direction {
                 Direction::Left => Animation::WalkLeft,
                 Direction::Right => Animation::WalkRight,
@@ -56,7 +54,6 @@ fn shoot_arrow<T: Component>(
         (
             &Transform,
             &Direction,
-            &IsSprinting,
             &mut TextureAtlasSprite,
             &AnimationIndexRange,
             &mut Action,
@@ -64,11 +61,13 @@ fn shoot_arrow<T: Component>(
         With<T>,
     >,
 ) {
-    for (transform, direction, is_sprinting, mut sprite, idx_range, mut action) in query.iter_mut()
-    {
+    for (transform, direction, mut sprite, idx_range, mut action) in query.iter_mut() {
         // if player is not sprinting and has released the fire (J) key while the bow is fully draw (sprite.idx == idx_rng.1 - 1)
-        if keys.just_released(KeyCode::J) && !is_sprinting.0 && sprite.index == idx_range.1 - 1 {
-            *action = Action::Walk;
+        if keys.just_released(KeyCode::J)
+            && *action != Action::Sprint
+            && sprite.index == idx_range.1 - 1
+        {
+            *action = Action::Idle;
             sprite.index += 1;
 
             // based on which direction the arrow is moving, choose either the X or Y arrow image and flip it if needed
