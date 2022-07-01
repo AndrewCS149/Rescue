@@ -1,4 +1,6 @@
-use crate::components::{Action, Animation, AnimationIndexRange, AnimationTimer, Player};
+use crate::components::{
+    Action, Animation, AnimationIndexRange, AnimationTimer, Direction, Player,
+};
 use bevy::prelude::*;
 
 pub struct AnimationPlugin;
@@ -16,28 +18,49 @@ fn animate_sprite(
         &mut AnimationTimer,
         &mut AnimationIndexRange,
         &mut TextureAtlasSprite,
-        &Action,
+        &mut Action,
+        &Direction,
+        &mut Animation,
     )>,
 ) {
-    for (mut timer, idx_range, mut sprite, action) in query.iter_mut() {
+    for (mut timer, idx_rng, mut sprite, mut action, direction, mut animation) in query.iter_mut() {
         timer.tick(time.delta());
         if timer.just_finished() {
             match *action {
-                Action::RangedAttack | Action::Walk | Action::Sprint => {
-                    if !(idx_range.0..=idx_range.1).contains(&sprite.index) {
-                        sprite.index = idx_range.0;
-                    } else if (idx_range.1 - 1..=idx_range.1).contains(&sprite.index)
-                        && *action == Action::RangedAttack
-                    {
+                Action::Walk | Action::Sprint => {
+                    if !(idx_rng.0..=idx_rng.1).contains(&sprite.index) {
+                        sprite.index = idx_rng.0;
                     } else {
                         sprite.index += 1;
                     }
                 }
-                _ => sprite.index = idx_range.0,
+                Action::RangedAttack => {
+                    if !(idx_rng.0..=idx_rng.1).contains(&sprite.index) {
+                        sprite.index = idx_rng.0;
+                    } else if !(idx_rng.1 - 1..=idx_rng.1).contains(&sprite.index) {
+                        sprite.index += 1;
+                    }
+                }
+                Action::MeleeAttack => {
+                    if !(idx_rng.0..=idx_rng.1).contains(&sprite.index) {
+                        sprite.index = idx_rng.0;
+                    } else if sprite.index == idx_rng.1 {
+                        *animation = match direction {
+                            Direction::Left => Animation::WalkLeft,
+                            Direction::Right => Animation::WalkRight,
+                            Direction::Up => Animation::WalkUp,
+                            Direction::Down => Animation::WalkDown,
+                        };
+                        *action = Action::Walk;
+                    } else {
+                        sprite.index += 1;
+                    }
+                }
+                _ => {}
             };
 
-            if sprite.index > idx_range.1 {
-                sprite.index = idx_range.0;
+            if sprite.index > idx_rng.1 {
+                sprite.index = idx_rng.0;
             }
         }
     }
