@@ -57,19 +57,13 @@ fn shoot_arrow<T: Component>(
             &Direction,
             &mut TextureAtlasSprite,
             &AnimationIndexRange,
-            &mut Action,
         ),
         With<T>,
     >,
 ) {
-    for (transform, direction, mut sprite, idx_range, mut action) in query.iter_mut() {
-        // if player is not sprinting and has released the fire (J) key while the bow is fully draw (sprite.idx == idx_rng.1 - 1)
-        if keys.just_released(KeyCode::J)
-            && *action != Action::Sprint
-            && sprite.index == idx_range.1 - 1
-        {
-            *action = Action::Idle;
-
+    for (transform, direction, mut sprite, idx_range) in query.iter_mut() {
+        // if has released the fire (J) key while the bow is fully draw (sprite.idx == idx_rng.1 - 1)
+        if keys.just_released(KeyCode::J) && sprite.index == idx_range.1 - 1 {
             // increase idx to play final frame
             sprite.index += 1;
 
@@ -110,7 +104,7 @@ fn shoot_arrow<T: Component>(
     }
 }
 
-// controls the movement and directions of the projectiles
+// controls the movement and direction of the arrows
 fn arrow_movement(
     time: Res<Time>,
     mut query: Query<(&mut Transform, &Direction, &Speed), With<Arrow>>,
@@ -128,7 +122,7 @@ fn arrow_movement(
     }
 }
 
-// despawn the projectile if it is outside of the window bounds
+// despawn the arrow if it is outside of the window bounds
 fn despawn_arrow(
     mut commands: Commands,
     mut windows: ResMut<Windows>,
