@@ -84,31 +84,8 @@ fn death(
                     commands.entity(enemy).despawn_recursive();
                 } else {
                     let enemy_width = sprite.custom_size.unwrap().x;
+                    let updated_healthbar = update_healthbar(enemy_width, health.0);
 
-                    // compute new healthbar size, color and location
-                    let remaining_health = enemy_width / (HEALTH / health.0);
-                    let x_pos = -((remaining_health - enemy_width).abs() / 2.0);
-                    let new_color = match health.0 {
-                        h if h < HEALTH / 4.0 => Color::ORANGE,
-                        h if h < HEALTH / 2.0 => Color::YELLOW,
-                        _ => Color::GREEN,
-                    };
-
-                    // create a new healthbar with updated health color and location
-                    let updated_healthbar = SpriteBundle {
-                        sprite: Sprite {
-                            color: new_color,
-                            custom_size: Some(Vec2::new(remaining_health, 3.0)),
-                            ..default()
-                        },
-                        transform: Transform {
-                            translation: Vec3::new(x_pos, 20.0, 0.0),
-                            ..default()
-                        },
-                        ..default()
-                    };
-
-                    // despawn the old health bar and spawn the new updated healthbar
                     commands.entity(enemy).despawn_descendants();
                     commands.entity(enemy).with_children(|parent| {
                         parent.spawn_bundle(updated_healthbar);
@@ -116,5 +93,31 @@ fn death(
                 }
             }
         }
+    }
+}
+
+// calculates new health bar size
+fn update_healthbar(enemy_width: f32, health: f32) -> SpriteBundle {
+    // compute new healthbar size, color and location
+    let remaining_health = enemy_width / (HEALTH / health);
+    let x_pos = -((remaining_health - enemy_width).abs() / 2.0);
+    let new_color = match health {
+        h if h < HEALTH / 4.0 => Color::ORANGE,
+        h if h < HEALTH / 2.0 => Color::YELLOW,
+        _ => Color::GREEN,
+    };
+
+    // create a new healthbar with updated health color and location
+    SpriteBundle {
+        sprite: Sprite {
+            color: new_color,
+            custom_size: Some(Vec2::new(remaining_health, 3.0)),
+            ..default()
+        },
+        transform: Transform {
+            translation: Vec3::new(x_pos, 20.0, 0.0),
+            ..default()
+        },
+        ..default()
     }
 }
