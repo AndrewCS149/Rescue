@@ -37,28 +37,24 @@ fn movement<T: Component>(
                 new_pos.x = -1.0;
                 *direction = Direction::Left;
                 *animation = Animation::WalkLeft;
-                *action = Action::Walk;
             }
             // right
             else if keys.pressed(KeyCode::D) {
                 new_pos.x = 1.0;
                 *direction = Direction::Right;
                 *animation = Animation::WalkRight;
-                *action = Action::Walk;
             }
             // up
             else if keys.pressed(KeyCode::W) {
                 new_pos.y = 1.0;
                 *direction = Direction::Up;
                 *animation = Animation::WalkUp;
-                *action = Action::Walk;
             }
             // down
             else if keys.pressed(KeyCode::S) {
                 new_pos.y = -1.0;
                 *direction = Direction::Down;
                 *animation = Animation::WalkDown;
-                *action = Action::Walk;
             } else {
                 *action = Action::Idle;
             }
