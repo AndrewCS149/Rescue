@@ -14,11 +14,12 @@ pub struct EnemyPlugin;
 
 impl Plugin for EnemyPlugin {
     fn build(&self, app: &mut App) {
-        app.add_startup_system(spawn_enemy).add_system(enemy_death);
+        app.add_startup_system(spawn).add_system(death);
     }
 }
 
-fn spawn_enemy(mut commands: Commands, assets: Res<AssetServer>) {
+// spawns an enemy with a healthbar
+fn spawn(mut commands: Commands, assets: Res<AssetServer>) {
     let healthbar = SpriteBundle {
         sprite: Sprite {
             color: Color::GREEN,
@@ -55,7 +56,8 @@ fn spawn_enemy(mut commands: Commands, assets: Res<AssetServer>) {
         .insert(BoundaryTrigger(BOUNDARY_TRIGGER));
 }
 
-fn enemy_death(
+// remove health from the enemy and destroys the enemy (death) when all health is depleted
+fn death(
     mut commands: Commands,
     projectile_query: Query<(Entity, &Transform, &Damage), With<Arrow>>,
     mut enemy_query: Query<(
