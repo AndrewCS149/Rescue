@@ -28,33 +28,25 @@ fn movement<T: Component>(
     for (mut transform, speed, sprint, mut direction, mut animation, mut action) in query.iter_mut()
     {
         if *action == Action::Idle || *action == Action::Walk || *action == Action::Sprint {
-            let mut new_pos = Vec3::new(0.0, 0.0, 0.0);
             let mut tmp_sprint = 1.0;
             *action = Action::Walk;
+            let mut params = (0.0, 0.0, *direction, *animation);
 
             // left
             if keys.pressed(KeyCode::A) {
-                new_pos.x = -1.0;
-                *direction = Direction::Left;
-                *animation = Animation::WalkLeft;
+                params = (-1.0, 0.0, Direction::Left, Animation::WalkLeft);
             }
             // right
             else if keys.pressed(KeyCode::D) {
-                new_pos.x = 1.0;
-                *direction = Direction::Right;
-                *animation = Animation::WalkRight;
+                params = (1.0, 0.0, Direction::Right, Animation::WalkRight);
             }
             // up
             else if keys.pressed(KeyCode::W) {
-                new_pos.y = 1.0;
-                *direction = Direction::Up;
-                *animation = Animation::WalkUp;
+                params = (0.0, 1.0, Direction::Up, Animation::WalkUp);
             }
             // down
             else if keys.pressed(KeyCode::S) {
-                new_pos.y = -1.0;
-                *direction = Direction::Down;
-                *animation = Animation::WalkDown;
+                params = (0.0, -1.0, Direction::Down, Animation::WalkDown);
             } else {
                 *action = Action::Idle;
             }
@@ -65,6 +57,9 @@ fn movement<T: Component>(
                 *action = Action::Sprint;
             }
 
+            *direction = params.2;
+            *animation = params.3;
+            let new_pos = Vec3::new(params.0, params.1, 0.0);
             transform.translation += new_pos * speed.0 * tmp_sprint * time.delta_seconds();
         }
     }

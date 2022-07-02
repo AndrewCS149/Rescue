@@ -20,7 +20,7 @@ pub enum Action {
     Sprint,
 }
 
-#[derive(Component)]
+#[derive(Component, Copy, Clone)]
 pub enum Animation {
     MeleeRight,
     MeleeLeft,
