@@ -6,16 +6,16 @@ pub struct CollisionPlugin;
 
 impl Plugin for CollisionPlugin {
     fn build(&self, app: &mut App) {
-        app.add_system(collision);
+        app.add_system(collision::<Enemy>);
     }
 }
 
-fn collision(
+fn collision<T: Component>(
     player_query: Query<(&Transform, &EntitySize), With<Player>>,
     mut enemy_query: Query<(
         &mut Transform,
         &EntitySize,
-        With<Enemy>,
+        With<T>,
         With<Collider>,
         Without<Player>,
     )>,
