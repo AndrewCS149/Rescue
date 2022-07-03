@@ -14,7 +14,9 @@ pub struct EnemyPlugin;
 
 impl Plugin for EnemyPlugin {
     fn build(&self, app: &mut App) {
-        app.add_startup_system(spawn).add_system(death);
+        app.add_startup_system(spawn)
+            .add_system(receive_damage)
+            .add_system(death);
     }
 }
 
@@ -56,8 +58,17 @@ fn spawn(mut commands: Commands, assets: Res<AssetServer>) {
         .insert(BoundaryTrigger(BOUNDARY_TRIGGER));
 }
 
+// despawns the enemy if health is at or below zero
+fn death(mut commands: Commands, enemy: Query<(Entity, &Health), With<Enemy>>) {
+    for (enemy, health) in enemy.iter() {
+        if health.0 <= 0.0 {
+            commands.entity(enemy).despawn_recursive();
+        }
+    }
+}
+
 // remove health from the enemy and destroys the enemy (death) when all health is depleted
-fn death(
+fn receive_damage(
     mut commands: Commands,
     projectile_query: Query<(Entity, &Transform, &Damage), With<Arrow>>,
     mut enemy_query: Query<(
@@ -79,18 +90,11 @@ fn death(
 
                 health.0 -= damage.0;
 
-                // depsawn enemy if health is at or below 0.
-                if health.0 <= 0.0 {
-                    commands.entity(enemy).despawn_recursive();
-                } else {
-                    let enemy_width = sprite.custom_size.unwrap().x;
-                    let updated_healthbar = update_healthbar(enemy_width, health.0);
-
-                    commands.entity(enemy).despawn_descendants();
-                    commands.entity(enemy).with_children(|parent| {
-                        parent.spawn_bundle(updated_healthbar);
-                    });
-                }
+                let enemy_width = sprite.custom_size.unwrap().x;
+                commands.entity(enemy).despawn_descendants();
+                commands.entity(enemy).with_children(|parent| {
+                    parent.spawn_bundle(update_healthbar(enemy_width, health.0));
+                });
             }
         }
     }
