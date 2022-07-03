@@ -14,9 +14,7 @@ fn build_map(mut commands: Commands, assets: Res<AssetServer>) {
             custom_size: Some(Vec2::new(1920.0, 1080.0)),
             ..default()
         },
-
         texture: assets.load("map.png"),
-        transform: Transform::from_xyz(0.0, 0.0, 0.0),
         ..default()
     };
 
