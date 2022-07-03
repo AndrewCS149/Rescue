@@ -1,12 +1,13 @@
 use bevy::prelude::*;
 
-use crate::components::{Collider, Enemy, EntitySize, Player};
+use crate::components::{Collider, Companion, Enemy, EntitySize, Player};
 
 pub struct CollisionPlugin;
 
 impl Plugin for CollisionPlugin {
     fn build(&self, app: &mut App) {
-        app.add_system(collision::<Enemy>);
+        app.add_system(collision::<Enemy>)
+            .add_system(collision::<Companion>);
     }
 }
 
