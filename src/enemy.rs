@@ -90,10 +90,13 @@ fn receive_damage(
 
                 health.0 -= damage.0;
 
-                let enemy_width = sprite.custom_size.unwrap().x;
+                // despawn healthbar and create a new updated healthbar
                 commands.entity(enemy).despawn_descendants();
+                let enemy_width = sprite.custom_size.unwrap().x;
+                let updated_healthbar = update_healthbar(enemy_width, health.0);
+
                 commands.entity(enemy).with_children(|parent| {
-                    parent.spawn_bundle(update_healthbar(enemy_width, health.0));
+                    parent.spawn_bundle(updated_healthbar);
                 });
             }
         }
