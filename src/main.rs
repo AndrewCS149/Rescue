@@ -4,6 +4,7 @@ mod animation;
 mod collision;
 mod components;
 mod dog;
+mod dog_ai;
 mod enemy;
 mod enemy_ai;
 mod map;
@@ -16,6 +17,7 @@ mod setup;
 use animation::AnimationPlugin;
 use collision::CollisionPlugin;
 use dog::DogPlugin;
+use dog_ai::DogAIPlugin;
 use enemy::EnemyPlugin;
 use enemy_ai::EnemyAIPlugin;
 use map::MapPlugin;
@@ -32,6 +34,7 @@ fn main() {
         .add_plugin(EnemyPlugin)
         .add_plugin(EnemyAIPlugin)
         .add_plugin(DogPlugin)
+        .add_plugin(DogAIPlugin)
         .add_plugin(CollisionPlugin)
         .add_plugin(MeleeAttackPlugin)
         .add_plugin(AnimationPlugin)

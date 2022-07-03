@@ -13,10 +13,10 @@ impl Plugin for EnemyAIPlugin {
 fn enemy_tracking(
     time: Res<Time>,
     mut enemy: Query<(&mut Transform, &Speed, &BoundaryTrigger, With<Enemy>)>,
-    mut player: Query<(&mut Transform, With<Player>, Without<Enemy>)>,
+    player: Query<(&Transform, With<Player>, Without<Enemy>)>,
 ) {
     for (mut enemy_transform, enemy_speed, boundary, _) in enemy.iter_mut() {
-        let player_pos = player.single_mut().0.translation;
+        let player_pos = player.single().0.translation;
 
         // only start tracking if within the set boundary trigger
         if enemy_transform
