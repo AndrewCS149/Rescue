@@ -70,8 +70,8 @@ fn death(mut commands: Commands, enemy: Query<(Entity, &Health), With<Enemy>>) {
 // remove health from the enemy and destroys the enemy (death) when all health is depleted
 fn receive_damage(
     mut commands: Commands,
-    projectile_query: Query<(Entity, &Transform, &Damage), With<Arrow>>,
-    mut enemy_query: Query<(
+    projectile: Query<(Entity, &Transform, &Damage), With<Arrow>>,
+    mut enemy: Query<(
         Entity,
         &Transform,
         &Sprite,
@@ -80,8 +80,8 @@ fn receive_damage(
         Without<Arrow>,
     )>,
 ) {
-    if let Some((projectile, projectile_pos, damage)) = projectile_query.iter().next() {
-        for (enemy, enemy_pos, sprite, mut health, _, _) in enemy_query.iter_mut() {
+    if let Some((projectile, projectile_pos, damage)) = projectile.iter().next() {
+        for (enemy, enemy_pos, sprite, mut health, _, _) in enemy.iter_mut() {
             if enemy_pos.translation.distance(projectile_pos.translation)
                 < sprite.custom_size.unwrap().x / 2.0
             {
