@@ -20,16 +20,6 @@ impl Plugin for EnemyPlugin {
 
 // spawns an enemy with a healthbar
 fn spawn(mut commands: Commands, assets: Res<AssetServer>) {
-    let healthbar = SpriteBundle {
-        sprite: Sprite {
-            color: Color::GREEN,
-            custom_size: Some(Vec2::new(30.0, 3.0)),
-            ..default()
-        },
-        transform: Transform::from_xyz(0.0, 20.0, 1.0),
-        ..default()
-    };
-
     let enemy = SpriteBundle {
         sprite: Sprite {
             custom_size: Some(Vec2::new(SIZE_X, SIZE_Y)),
@@ -37,6 +27,16 @@ fn spawn(mut commands: Commands, assets: Res<AssetServer>) {
         },
         transform: Transform::from_xyz(300.0, 100.0, 1.0),
         texture: assets.load("chicken.png"),
+        ..default()
+    };
+
+    let healthbar = SpriteBundle {
+        sprite: Sprite {
+            color: Color::GREEN,
+            custom_size: Some(Vec2::new(enemy.sprite.custom_size.unwrap().x, 3.0)),
+            ..default()
+        },
+        transform: Transform::from_xyz(0.0, 20.0, 1.0),
         ..default()
     };
 
