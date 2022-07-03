@@ -122,10 +122,7 @@ fn update_healthbar(enemy_width: f32, health: f32) -> SpriteBundle {
             custom_size: Some(Vec2::new(remaining_health, 3.0)),
             ..default()
         },
-        transform: Transform {
-            translation: Vec3::new(x_pos, 20.0, 0.0),
-            ..default()
-        },
+        transform: Transform::from_xyz(x_pos, 20.0, 0.0),
         ..default()
     }
 }
