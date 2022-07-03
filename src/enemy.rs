@@ -95,6 +95,7 @@ fn receive_damage(
                 let enemy_width = sprite.custom_size.unwrap().x;
                 let updated_healthbar = update_healthbar(enemy_width, health.0);
 
+                // spawn new healthbar
                 commands.entity(enemy).with_children(|parent| {
                     parent.spawn_bundle(updated_healthbar);
                 });
