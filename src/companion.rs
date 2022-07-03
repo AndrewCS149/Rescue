@@ -1,17 +1,19 @@
 use bevy::prelude::*;
 
+use crate::components::{Companion, Speed};
+
 const SIZE_X: f32 = 40.0;
 const SIZE_Y: f32 = 40.0;
 
-pub struct DogPlugin;
+pub struct CompanionPlugin;
 
-impl Plugin for DogPlugin {
+impl Plugin for CompanionPlugin {
     fn build(&self, app: &mut App) {
-        app.add_startup_system(spawn_dog);
+        app.add_startup_system(spawn);
     }
 }
 
-fn spawn_dog(mut commands: Commands, assets: Res<AssetServer>) {
+fn spawn(mut commands: Commands, assets: Res<AssetServer>) {
     let dog = SpriteBundle {
         sprite: Sprite {
             custom_size: Some(Vec2::new(SIZE_X, SIZE_Y)),
@@ -22,5 +24,8 @@ fn spawn_dog(mut commands: Commands, assets: Res<AssetServer>) {
         ..default()
     };
 
-    commands.spawn_bundle(dog);
+    commands
+        .spawn_bundle(dog)
+        .insert(Companion)
+        .insert(Speed(100.0));
 }

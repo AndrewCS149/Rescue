@@ -43,6 +43,9 @@ pub struct BoundaryTrigger(pub f32);
 pub struct Collider;
 
 #[derive(Component)]
+pub struct Companion;
+
+#[derive(Component)]
 pub struct Damage(pub f32);
 
 #[derive(Component, Copy, Clone, Eq, PartialEq)]
