@@ -1,9 +1,10 @@
 use bevy::prelude::*;
 
-use crate::components::{Companion, Speed};
+use crate::components::{BoundaryTrigger, Collider, Companion, EntitySize, Speed};
 
 const SIZE_X: f32 = 40.0;
 const SIZE_Y: f32 = 40.0;
+const SPEED: f32 = 150.0;
 
 pub struct CompanionPlugin;
 
@@ -14,7 +15,7 @@ impl Plugin for CompanionPlugin {
 }
 
 fn spawn(mut commands: Commands, assets: Res<AssetServer>) {
-    let dog = SpriteBundle {
+    let companion = SpriteBundle {
         sprite: Sprite {
             custom_size: Some(Vec2::new(SIZE_X, SIZE_Y)),
             ..default()
@@ -25,7 +26,13 @@ fn spawn(mut commands: Commands, assets: Res<AssetServer>) {
     };
 
     commands
-        .spawn_bundle(dog)
+        .spawn_bundle(companion)
         .insert(Companion)
-        .insert(Speed(100.0));
+        .insert(Collider)
+        .insert(EntitySize {
+            x: SIZE_X,
+            y: SIZE_Y,
+        })
+        .insert(BoundaryTrigger(100.0))
+        .insert(Speed(SPEED));
 }
