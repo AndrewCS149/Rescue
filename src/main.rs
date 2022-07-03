@@ -1,10 +1,11 @@
 use bevy::prelude::*;
 
+mod ai;
 mod animation;
 mod collision;
+mod companion;
+mod companion_ai;
 mod components;
-mod dog;
-mod dog_ai;
 mod enemy;
 mod enemy_ai;
 mod map;
@@ -16,8 +17,8 @@ mod setup;
 
 use animation::AnimationPlugin;
 use collision::CollisionPlugin;
-use dog::DogPlugin;
-use dog_ai::DogAIPlugin;
+use companion::CompanionPlugin;
+use companion_ai::CompanionAIPlugin;
 use enemy::EnemyPlugin;
 use enemy_ai::EnemyAIPlugin;
 use map::MapPlugin;
@@ -33,8 +34,8 @@ fn main() {
         .add_plugin(SetupPlugin)
         .add_plugin(EnemyPlugin)
         .add_plugin(EnemyAIPlugin)
-        .add_plugin(DogPlugin)
-        .add_plugin(DogAIPlugin)
+        .add_plugin(CompanionPlugin)
+        .add_plugin(CompanionAIPlugin)
         .add_plugin(CollisionPlugin)
         .add_plugin(MeleeAttackPlugin)
         .add_plugin(AnimationPlugin)
