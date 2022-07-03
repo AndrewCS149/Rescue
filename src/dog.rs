@@ -1,5 +1,7 @@
 use bevy::prelude::*;
 
+use crate::components::Companion;
+
 const SIZE_X: f32 = 40.0;
 const SIZE_Y: f32 = 40.0;
 
@@ -22,5 +24,5 @@ fn spawn_dog(mut commands: Commands, assets: Res<AssetServer>) {
         ..default()
     };
 
-    commands.spawn_bundle(dog);
+    commands.spawn_bundle(dog).insert(Companion);
 }

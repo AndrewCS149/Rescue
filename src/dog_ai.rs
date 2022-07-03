@@ -1,5 +1,7 @@
 use bevy::prelude::*;
 
+use crate::components::Player;
+
 pub struct DogAIPlugin;
 
 impl Plugin for DogAIPlugin {
@@ -8,4 +10,4 @@ impl Plugin for DogAIPlugin {
     }
 }
 
-fn follow() {}
+fn follow(player: Query<&Transform, With<Player>>) {}
