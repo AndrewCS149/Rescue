@@ -32,20 +32,29 @@ fn movement<T: Component>(
             *action = Action::Walk;
             let mut params = (0.0, 0.0, *direction, *animation);
 
+            // up left
+            if keys.pressed(KeyCode::A) && keys.pressed(KeyCode::W) {
+                params = (-1.0, 1.0, Direction::Down, Animation::WalkUpLeft);
+            // up right
+            } else if keys.pressed(KeyCode::D) && keys.pressed(KeyCode::W) {
+                params = (1.0, 1.0, Direction::Down, Animation::WalkUpRight);
+            // down left
+            } else if keys.pressed(KeyCode::A) && keys.pressed(KeyCode::S) {
+                params = (-1.0, -1.0, Direction::Down, Animation::WalkDownLeft);
+            // down right
+            } else if keys.pressed(KeyCode::D) && keys.pressed(KeyCode::S) {
+                params = (1.0, -1.0, Direction::Down, Animation::WalkDownRight);
             // left
-            if keys.pressed(KeyCode::A) {
+            } else if keys.pressed(KeyCode::A) {
                 params = (-1.0, 0.0, Direction::Left, Animation::WalkLeft);
-            }
             // right
-            else if keys.pressed(KeyCode::D) {
+            } else if keys.pressed(KeyCode::D) {
                 params = (1.0, 0.0, Direction::Right, Animation::WalkRight);
-            }
             // up
-            else if keys.pressed(KeyCode::W) {
+            } else if keys.pressed(KeyCode::W) {
                 params = (0.0, 1.0, Direction::Up, Animation::WalkUp);
-            }
             // down
-            else if keys.pressed(KeyCode::S) {
+            } else if keys.pressed(KeyCode::S) {
                 params = (0.0, -1.0, Direction::Down, Animation::WalkDown);
             } else {
                 *action = Action::Idle;

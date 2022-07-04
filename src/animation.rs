@@ -79,12 +79,16 @@ fn change_animation<T: Component>(
             Animation::WalkUp => AnimationIndexRange(4, 7),
             Animation::WalkLeft => AnimationIndexRange(8, 11),
             Animation::WalkRight => AnimationIndexRange(12, 15),
-            Animation::ShootRight => AnimationIndexRange(16, 19),
-            Animation::ShootLeft => AnimationIndexRange(20, 23),
-            Animation::ShootUp => AnimationIndexRange(24, 27),
-            Animation::ShootDown => AnimationIndexRange(28, 31),
-            Animation::MeleeLeft => AnimationIndexRange(32, 33),
-            Animation::MeleeRight => AnimationIndexRange(34, 35),
+            Animation::WalkUpRight => AnimationIndexRange(16, 19),
+            Animation::WalkUpLeft => AnimationIndexRange(20, 23),
+            Animation::WalkDownRight => AnimationIndexRange(16, 19),
+            Animation::WalkDownLeft => AnimationIndexRange(20, 23),
+            Animation::ShootRight => AnimationIndexRange(24, 27),
+            Animation::ShootLeft => AnimationIndexRange(28, 31),
+            Animation::ShootUp => AnimationIndexRange(32, 35),
+            Animation::ShootDown => AnimationIndexRange(36, 39),
+            Animation::MeleeLeft => AnimationIndexRange(40, 42),
+            Animation::MeleeRight => AnimationIndexRange(43, 45),
         };
     }
 }
