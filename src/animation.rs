@@ -56,6 +56,9 @@ fn animate_sprite(
                         sprite.index += 1;
                     }
                 }
+                Action::Idle => {
+                    sprite.index = idx_rng.0;
+                }
                 _ => {}
             };
 
