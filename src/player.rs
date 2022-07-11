@@ -45,6 +45,6 @@ fn spawn_player(
         })
         .insert(Sprint(1.5))
         .insert(Direction::Down)
-        .insert(Animation::ShootLeft)
+        .insert(Animation::WalkDown)
         .insert(Action::Idle);
 }
