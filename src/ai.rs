@@ -12,8 +12,12 @@ pub mod ai {
             _ => 0.0,
         };
 
-        new_pos.x = calc_new_pos(other_pos.x, player_pos.x);
-        new_pos.y = calc_new_pos(other_pos.y, player_pos.y);
+        // if the x difference is greater than the y difference
+        if (other_pos.x - player_pos.x).abs() > (other_pos.y - player_pos.y).abs() {
+            new_pos.x = calc_new_pos(other_pos.x, player_pos.x);
+        } else {
+            new_pos.y = calc_new_pos(other_pos.y, player_pos.y);
+        }
 
         new_pos
     }
