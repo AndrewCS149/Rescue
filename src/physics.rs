@@ -32,20 +32,8 @@ fn movement<T: Component>(
             *action = Action::Walk;
             let mut params = (0.0, 0.0, *direction, *animation);
 
-            // up left
-            if keys.pressed(KeyCode::A) && keys.pressed(KeyCode::W) {
-                params = (-1.0, 1.0, Direction::Down, Animation::WalkUpLeft);
-            // up right
-            } else if keys.pressed(KeyCode::D) && keys.pressed(KeyCode::W) {
-                params = (1.0, 1.0, Direction::Down, Animation::WalkUpRight);
-            // down left
-            } else if keys.pressed(KeyCode::A) && keys.pressed(KeyCode::S) {
-                params = (-1.0, -1.0, Direction::Down, Animation::WalkDownLeft);
-            // down right
-            } else if keys.pressed(KeyCode::D) && keys.pressed(KeyCode::S) {
-                params = (1.0, -1.0, Direction::Down, Animation::WalkDownRight);
             // left
-            } else if keys.pressed(KeyCode::A) {
+            if keys.pressed(KeyCode::A) {
                 params = (-1.0, 0.0, Direction::Left, Animation::WalkLeft);
             // right
             } else if keys.pressed(KeyCode::D) {

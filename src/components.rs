@@ -34,10 +34,6 @@ pub enum Animation {
     WalkRight,
     WalkUp,
     WalkDown,
-    WalkUpLeft,
-    WalkUpRight,
-    WalkDownLeft,
-    WalkDownRight,
 }
 
 #[derive(Component)]
