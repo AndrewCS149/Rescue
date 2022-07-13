@@ -83,8 +83,8 @@ fn change_animation<T: Component>(
             Animation::ShootLeft => AnimationIndexRange(36, 39),
             Animation::ShootUp => AnimationIndexRange(40, 42),
             Animation::ShootDown => AnimationIndexRange(43, 45),
-            Animation::MeleeLeft => AnimationIndexRange(46, 48),
-            Animation::MeleeRight => AnimationIndexRange(49, 51),
+            Animation::MeleeLeft => AnimationIndexRange(48, 50),
+            Animation::MeleeRight => AnimationIndexRange(51, 53),
         };
     }
 }
