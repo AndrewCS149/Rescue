@@ -21,8 +21,8 @@ fn attack<T: Component>(
             *animation = match direction {
                 Direction::Left => Animation::MeleeLeft,
                 Direction::Right => Animation::MeleeRight,
-                Direction::Up => Animation::MeleeLeft,
-                Direction::Down => Animation::MeleeRight,
+                Direction::Up => Animation::MeleeUp,
+                Direction::Down => Animation::MeleeDown,
             };
         }
     }
