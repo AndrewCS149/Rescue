@@ -1,7 +1,7 @@
 use bevy::prelude::*;
 
 use crate::components::{
-    Arrow, BoundaryTrigger, Collider, Damage, Enemy, EntitySize, Health, Speed,
+    Arrow, BoundaryTrigger, Collider, Collision, Damage, Enemy, EntitySize, Health, Speed,
 };
 
 const HEALTH: f32 = 200.0;
@@ -53,6 +53,7 @@ fn spawn(mut commands: Commands, assets: Res<AssetServer>) {
             y: SIZE_Y,
         })
         .insert(Collider)
+        .insert(Collision::None)
         .insert(Speed(SPEED))
         .insert(Health(HEALTH))
         .insert(BoundaryTrigger(BOUNDARY_TRIGGER));
