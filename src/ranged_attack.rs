@@ -1,5 +1,11 @@
-use crate::components::{
-    Action, Animation, AnimationIndexRange, Arrow, Damage, Direction, Player, Speed,
+use std::time::Duration;
+
+use crate::{
+    components::{
+        Action, Animation, AnimationIndexRange, Arrow, Damage, Direction, Enemy, Health, Hurting,
+        Player, Speed,
+    },
+    shared::health,
 };
 use bevy::prelude::*;
 
@@ -13,7 +19,8 @@ impl Plugin for RangedAttackPlugin {
         app.add_system(draw_bowstring)
             .add_system(shoot_arrow::<Player>)
             .add_system(arrow_movement)
-            .add_system(despawn_arrow);
+            .add_system(despawn_arrow)
+            .add_system(damage);
     }
 }
 
@@ -136,6 +143,51 @@ fn despawn_arrow(
             || transform.translation.y < -(window.height() / 2.0)
         {
             commands.entity(projectile).despawn();
+        }
+    }
+}
+
+// remove health from the enemy and destroys the enemy (death) when all health is depleted
+fn damage(
+    mut commands: Commands,
+    arrow: Query<(Entity, &Transform, &Damage), With<Arrow>>,
+    mut enemy: Query<
+        (
+            Entity,
+            &Transform,
+            &mut Sprite,
+            &mut Hurting,
+            &mut Health,
+            Without<Arrow>,
+        ),
+        With<Enemy>,
+    >,
+) {
+    if let Some((arrow, arrow_pos, damage)) = arrow.iter().next() {
+        for (enemy, enemy_pos, mut sprite, mut hurting, mut health, _) in enemy.iter_mut() {
+            if enemy_pos.translation.distance(arrow_pos.translation)
+                < sprite.custom_size.unwrap().x / 2.0
+            {
+                // despawn projectile when contact with enemy is made
+                commands.entity(arrow).despawn();
+
+                health.current -= damage.0;
+
+                // despawn healthbar and create a new updated healthbar
+                commands.entity(enemy).despawn_descendants();
+                let enemy_width = sprite.custom_size.unwrap().x;
+                let updated_healthbar =
+                    health::update_healthbar(enemy_width, health.current, health.total);
+
+                // spawn new healthbar
+                commands.entity(enemy).with_children(|parent| {
+                    parent.spawn_bundle(updated_healthbar);
+                });
+
+                // turn enemy red for 'hurting' effect
+                hurting.0 = Timer::new(Duration::from_millis(200), false);
+                sprite.color = Color::RED;
+            }
         }
     }
 }

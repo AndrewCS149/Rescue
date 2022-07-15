@@ -42,8 +42,20 @@ pub struct BoundaryTrigger(pub f32);
 #[derive(Component)]
 pub struct Collider;
 
+#[derive(Component, Copy, Clone, Eq, PartialEq, Debug)]
+pub enum Collision {
+    Left,
+    Right,
+    Top,
+    Bottom,
+    None,
+}
+
 #[derive(Component)]
 pub struct Companion;
+
+// #[derive(Component)]
+// pub struct CurrentHP(pub f32);
 
 #[derive(Component)]
 pub struct Damage(pub f32);
@@ -60,10 +72,16 @@ pub enum Direction {
 pub struct Enemy;
 
 #[derive(Component)]
-pub struct Health(pub f32);
+pub struct Health {
+    pub total: f32,
+    pub current: f32,
+}
 
 #[derive(Component)]
 pub struct Hurting(pub Timer);
+
+#[derive(Component)]
+pub struct IsMeleeRange(pub bool);
 
 #[derive(Component)]
 pub struct Player;
@@ -79,3 +97,6 @@ pub struct Speed(pub f32);
 
 #[derive(Component)]
 pub struct Sprint(pub f32);
+
+// #[derive(Component)]
+// pub struct TotalHP(pub f32);
