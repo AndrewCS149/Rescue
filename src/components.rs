@@ -63,6 +63,9 @@ pub struct Enemy;
 pub struct Health(pub f32);
 
 #[derive(Component)]
+pub struct Hurting(pub Timer);
+
+#[derive(Component)]
 pub struct Player;
 
 #[derive(Component)]

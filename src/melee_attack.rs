@@ -12,9 +12,9 @@ impl Plugin for MeleeAttackPlugin {
 
 fn attack<T: Component>(
     keys: Res<Input<KeyCode>>,
-    mut query: Query<(&Direction, &mut Action, &mut Animation), With<T>>,
+    mut player_query: Query<(&Direction, &mut Action, &mut Animation), With<T>>,
 ) {
-    for (direction, mut action, mut animation) in query.iter_mut() {
+    for (direction, mut action, mut animation) in player_query.iter_mut() {
         if keys.just_pressed(KeyCode::Space) && *action != Action::MeleeAttack {
             *action = Action::MeleeAttack;
 

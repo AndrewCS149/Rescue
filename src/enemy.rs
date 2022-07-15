@@ -1,7 +1,9 @@
+use std::time::Duration;
+
 use bevy::prelude::*;
 
 use crate::components::{
-    Arrow, BoundaryTrigger, Collider, Damage, Enemy, EntitySize, Health, Speed,
+    Arrow, BoundaryTrigger, Collider, Damage, Enemy, EntitySize, Health, Hurting, Speed,
 };
 
 const HEALTH: f32 = 200.0;
@@ -16,7 +18,8 @@ impl Plugin for EnemyPlugin {
     fn build(&self, app: &mut App) {
         app.add_startup_system(spawn)
             .add_system(receive_damage)
-            .add_system(death);
+            .add_system(death)
+            .add_system(receive_damage_effect);
     }
 }
 
@@ -53,6 +56,7 @@ fn spawn(mut commands: Commands, assets: Res<AssetServer>) {
             y: SIZE_Y,
         })
         .insert(Collider)
+        .insert(Hurting(Timer::new(Duration::from_secs(0), false)))
         .insert(Speed(SPEED))
         .insert(Health(HEALTH))
         .insert(BoundaryTrigger(BOUNDARY_TRIGGER));
@@ -71,15 +75,25 @@ fn death(mut commands: Commands, enemy: Query<(Entity, &Health), With<Enemy>>) {
 fn receive_damage(
     mut commands: Commands,
     arrow: Query<(Entity, &Transform, &Damage), With<Arrow>>,
-    mut enemy: Query<(Entity, &Transform, &Sprite, &mut Health, Without<Arrow>), With<Enemy>>,
+    mut enemy: Query<
+        (
+            Entity,
+            &Transform,
+            &mut Sprite,
+            &mut Health,
+            &mut Hurting,
+            Without<Arrow>,
+        ),
+        With<Enemy>,
+    >,
 ) {
-    if let Some((projectile, projectile_pos, damage)) = arrow.iter().next() {
-        for (enemy, enemy_pos, sprite, mut health, _) in enemy.iter_mut() {
-            if enemy_pos.translation.distance(projectile_pos.translation)
+    if let Some((arrow, arrow_pos, damage)) = arrow.iter().next() {
+        for (enemy, enemy_pos, mut sprite, mut health, mut hurting, _) in enemy.iter_mut() {
+            if enemy_pos.translation.distance(arrow_pos.translation)
                 < sprite.custom_size.unwrap().x / 2.0
             {
                 // despawn projectile when contact with enemy is made
-                commands.entity(projectile).despawn();
+                commands.entity(arrow).despawn();
 
                 health.0 -= damage.0;
 
@@ -92,7 +106,24 @@ fn receive_damage(
                 commands.entity(enemy).with_children(|parent| {
                     parent.spawn_bundle(updated_healthbar);
                 });
+
+                // turn enemy red for 'hurting' effect
+                hurting.0 = Timer::new(Duration::from_millis(200), false);
+                sprite.color = Color::RED;
             }
+        }
+    }
+}
+
+fn receive_damage_effect(
+    time: Res<Time>,
+    mut enemy: Query<(&mut Sprite, &mut Hurting), With<Enemy>>,
+) {
+    for (mut sprite, mut hurting) in enemy.iter_mut() {
+        hurting.0.tick(time.delta());
+
+        if hurting.0.just_finished() {
+            sprite.color = Color::default();
         }
     }
 }

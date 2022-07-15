@@ -24,7 +24,6 @@ fn collision<T: Component, K: Component>(
     for (player_pos, player_size) in player_query.iter_mut() {
         for (mut enemy_transform, enemy_size, _, _, _) in enemy_query.iter_mut() {
             let enemy_pos = enemy_transform.translation;
-
             let player_pos = player_pos.translation;
 
             // this gives the collision space more pixels to hit. If it were just one, the collision would almost never happen
