@@ -88,13 +88,13 @@ fn receive_damage(
         With<Enemy>,
     >,
 ) {
-    if let Some((projectile, projectile_pos, damage)) = arrow.iter().next() {
+    if let Some((arrow, arrow_pos, damage)) = arrow.iter().next() {
         for (enemy, enemy_pos, mut sprite, mut health, mut hurting, _) in enemy.iter_mut() {
-            if enemy_pos.translation.distance(projectile_pos.translation)
+            if enemy_pos.translation.distance(arrow_pos.translation)
                 < sprite.custom_size.unwrap().x / 2.0
             {
                 // despawn projectile when contact with enemy is made
-                commands.entity(projectile).despawn();
+                commands.entity(arrow).despawn();
 
                 health.0 -= damage.0;
 
