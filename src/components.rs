@@ -42,15 +42,6 @@ pub struct BoundaryTrigger(pub f32);
 #[derive(Component)]
 pub struct Collider;
 
-#[derive(Component, Copy, Clone, Eq, PartialEq, Debug)]
-pub enum Collision {
-    Left,
-    Right,
-    Top,
-    Bottom,
-    None,
-}
-
 #[derive(Component)]
 pub struct Companion;
 

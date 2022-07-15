@@ -3,7 +3,7 @@ use std::time::Duration;
 use bevy::prelude::*;
 
 use crate::components::{
-    Arrow, BoundaryTrigger, Collider, Collision, Damage, Enemy, EntitySize, Health, Hurting, Speed,
+    Arrow, BoundaryTrigger, Collider, Damage, Enemy, EntitySize, Health, Hurting, Speed,
 };
 
 const HEALTH: f32 = 200.0;
@@ -57,7 +57,6 @@ fn spawn(mut commands: Commands, assets: Res<AssetServer>) {
         })
         .insert(Collider)
         .insert(Hurting(Timer::new(Duration::from_secs(0), false)))
-        .insert(Collision::None)
         .insert(Speed(SPEED))
         .insert(Health(HEALTH))
         .insert(BoundaryTrigger(BOUNDARY_TRIGGER));
