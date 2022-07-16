@@ -199,12 +199,10 @@ fn damage(
 }
 
 fn knockback(direction: Direction) -> Vec3 {
-    let params = match direction {
-        Direction::Left => (-KNOCKBACK, 0.0),
-        Direction::Right => (KNOCKBACK, 0.0),
-        Direction::Up => (0.0, KNOCKBACK),
-        Direction::Down => (0.0, -KNOCKBACK),
-    };
-
-    Vec3::new(params.0, params.1, 0.0)
+    match direction {
+        Direction::Left => Vec3::new(-KNOCKBACK, 0.0, 0.0),
+        Direction::Right => Vec3::new(KNOCKBACK, 0.0, 0.0),
+        Direction::Up => Vec3::new(0.0, KNOCKBACK, 0.0),
+        Direction::Down => Vec3::new(0.0, -KNOCKBACK, 0.0),
+    }
 }
