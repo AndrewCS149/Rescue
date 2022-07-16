@@ -7,7 +7,8 @@ pub struct CollisionPlugin;
 impl Plugin for CollisionPlugin {
     fn build(&self, app: &mut App) {
         app.add_system(collision::<Enemy, Player>)
-            .add_system(collision::<Companion, Player>);
+            .add_system(collision::<Companion, Player>)
+            .add_system(collision::<Companion, Enemy>);
     }
 }
 
