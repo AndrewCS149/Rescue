@@ -1,6 +1,5 @@
 use bevy::prelude::*;
 
-mod ai;
 mod animation;
 mod collision;
 mod companion;
@@ -14,6 +13,7 @@ mod physics;
 mod player;
 mod ranged_attack;
 mod setup;
+mod shared;
 
 use animation::AnimationPlugin;
 use collision::CollisionPlugin;

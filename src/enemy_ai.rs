@@ -1,7 +1,7 @@
 use bevy::prelude::*;
 
-use crate::ai::ai;
 use crate::components::{BoundaryTrigger, Enemy, Player, Speed};
+use crate::shared::ai;
 
 pub struct EnemyAIPlugin;
 

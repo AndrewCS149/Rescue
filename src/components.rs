@@ -60,10 +60,29 @@ pub enum Direction {
 pub struct Enemy;
 
 #[derive(Component)]
-pub struct Health(pub f32);
+pub struct Health {
+    total: f32,
+    pub current: f32,
+}
+
+impl Health {
+    pub fn new(health: f32) -> Self {
+        Health {
+            total: health,
+            current: health,
+        }
+    }
+
+    pub fn get_total(&self) -> f32 {
+        self.total
+    }
+}
 
 #[derive(Component)]
 pub struct Hurting(pub Timer);
+
+#[derive(Component)]
+pub struct IsMeleeRange(pub bool);
 
 #[derive(Component)]
 pub struct Player;
