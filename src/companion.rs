@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 
-use crate::components::{BoundaryTrigger, Collider, Collision, Companion, EntitySize, Speed};
+use crate::components::{BoundaryTrigger, Collider, Companion, EntitySize, Speed};
 
 const SIZE_X: f32 = 40.0;
 const SIZE_Y: f32 = 40.0;
@@ -34,6 +34,5 @@ fn spawn(mut commands: Commands, assets: Res<AssetServer>) {
             y: SIZE_Y,
         })
         .insert(BoundaryTrigger(100.0))
-        .insert(Speed(SPEED))
-        .insert(Collision::None);
+        .insert(Speed(SPEED));
 }

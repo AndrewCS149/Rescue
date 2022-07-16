@@ -42,15 +42,6 @@ pub struct BoundaryTrigger(pub f32);
 #[derive(Component)]
 pub struct Collider;
 
-#[derive(Component, Copy, Clone, Eq, PartialEq, Debug)]
-pub enum Collision {
-    Left,
-    Right,
-    Top,
-    Bottom,
-    None,
-}
-
 #[derive(Component)]
 pub struct Companion;
 
@@ -70,8 +61,21 @@ pub struct Enemy;
 
 #[derive(Component)]
 pub struct Health {
-    pub total: f32,
+    total: f32,
     pub current: f32,
+}
+
+impl Health {
+    pub fn new(health: f32) -> Self {
+        Health {
+            total: health,
+            current: health,
+        }
+    }
+
+    pub fn get_total(&self) -> f32 {
+        self.total
+    }
 }
 
 #[derive(Component)]

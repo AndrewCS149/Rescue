@@ -177,7 +177,7 @@ fn damage(
                 commands.entity(enemy).despawn_descendants();
                 let enemy_width = sprite.custom_size.unwrap().x;
                 let updated_healthbar =
-                    health::update_healthbar(enemy_width, health.current, health.total);
+                    health::update_healthbar(enemy_width, health.current, health.get_total());
 
                 // spawn new healthbar
                 commands.entity(enemy).with_children(|parent| {

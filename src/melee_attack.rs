@@ -5,6 +5,8 @@ use crate::{
     shared::health,
 };
 
+const DAMAGE: f32 = 30.0;
+
 pub struct MeleeAttackPlugin;
 
 impl Plugin for MeleeAttackPlugin {
@@ -39,7 +41,6 @@ fn attack<T: Component>(
     mut enemy_query: Query<(Entity, &mut Health, &IsMeleeRange, &Sprite), With<Enemy>>,
     mut player_query: Query<(&Direction, &mut Action, &mut Animation), With<T>>,
 ) {
-    // for (enemy, mut enemy_health, is_melee_range, enemy_sprite) in enemy_query.iter_mut() {
     for (direction, mut action, mut animation) in player_query.iter_mut() {
         if keys.just_pressed(KeyCode::Space) && *action != Action::MeleeAttack {
             *action = Action::MeleeAttack;
@@ -51,12 +52,11 @@ fn attack<T: Component>(
                 Direction::Down => Animation::MeleeDown,
             };
 
-            // println!("{}", is_melee_range.0);
             if let Some((enemy, mut enemy_health, is_melee_range, enemy_sprite)) =
                 enemy_query.iter_mut().next()
             {
                 if is_melee_range.0 {
-                    enemy_health.current -= 25.0;
+                    enemy_health.current -= DAMAGE;
 
                     // despawn healthbar and create a new updated healthbar
                     commands.entity(enemy).despawn_descendants();
@@ -64,7 +64,7 @@ fn attack<T: Component>(
                     let updated_healthbar = health::update_healthbar(
                         enemy_width,
                         enemy_health.current,
-                        enemy_health.total,
+                        enemy_health.get_total(),
                     );
 
                     // spawn new healthbar
