@@ -54,9 +54,6 @@ pub enum Collision {
 #[derive(Component)]
 pub struct Companion;
 
-// #[derive(Component)]
-// pub struct CurrentHP(pub f32);
-
 #[derive(Component)]
 pub struct Damage(pub f32);
 
@@ -97,6 +94,3 @@ pub struct Speed(pub f32);
 
 #[derive(Component)]
 pub struct Sprint(pub f32);
-
-// #[derive(Component)]
-// pub struct TotalHP(pub f32);
