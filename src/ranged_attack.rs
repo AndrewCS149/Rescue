@@ -11,6 +11,7 @@ use bevy::prelude::*;
 
 const SPEED: f32 = 1000.0;
 const DAMAGE: f32 = 25.0;
+const KNOCKBACK: f32 = 10.0;
 
 pub struct RangedAttackPlugin;
 
@@ -150,11 +151,12 @@ fn despawn_arrow(
 // remove health from the enemy and destroys the enemy (death) when all health is depleted
 fn damage(
     mut commands: Commands,
-    arrow: Query<(Entity, &Transform, &Damage), With<Arrow>>,
+    time: Res<Time>,
+    arrow: Query<(Entity, &Transform, &Damage, &Direction), With<Arrow>>,
     mut enemy: Query<
         (
             Entity,
-            &Transform,
+            &mut Transform,
             &mut Sprite,
             &mut Hurting,
             &mut Health,
@@ -163,11 +165,15 @@ fn damage(
         With<Enemy>,
     >,
 ) {
-    if let Some((arrow, arrow_pos, damage)) = arrow.iter().next() {
-        for (enemy, enemy_pos, mut sprite, mut hurting, mut health, _) in enemy.iter_mut() {
+    if let Some((arrow, arrow_pos, damage, arrow_direction)) = arrow.iter().next() {
+        for (enemy, mut enemy_pos, mut sprite, mut hurting, mut health, _) in enemy.iter_mut() {
             if enemy_pos.translation.distance(arrow_pos.translation)
                 < sprite.custom_size.unwrap().x / 2.0
             {
+                // knock back
+                let new_pos = knockback(*arrow_direction);
+                enemy_pos.translation += new_pos * 150.0 * time.delta_seconds();
+
                 // despawn projectile when contact with enemy is made
                 commands.entity(arrow).despawn();
 
@@ -190,4 +196,15 @@ fn damage(
             }
         }
     }
+}
+
+fn knockback(direction: Direction) -> Vec3 {
+    let params = match direction {
+        Direction::Left => (-KNOCKBACK, 0.0),
+        Direction::Right => (KNOCKBACK, 0.0),
+        Direction::Up => (0.0, KNOCKBACK),
+        Direction::Down => (0.0, -KNOCKBACK),
+    };
+
+    Vec3::new(params.0, params.1, 0.0)
 }
